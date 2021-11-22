@@ -12,23 +12,22 @@ class Usuario  {
     }
 
     addBook (nombre, autor){
-        let arraylibros = [{nombre,autor}]
-        this.libros.push(arraylibros)
+        this.libros.push({nombre:nombre,autor:autor})
     }
     countMascotas () {
         return this.mascotas.length
     }
 
     getBookNames(){
-        if(this.libros.length>0){
-            for(let i = 0;i<this.libros.length;i++){
-            console.log(this.libros[i].nombre)
-             
-            }}
-        else{
-            console.log("No hay libros")
+        let nombrelibros = [];
+
+            for(const obj of this.libros){
+            nombrelibros.push(obj.nombre)
+            return nombrelibros
+            }
         }
-    }
+       
+    
 
     addMascota(tipo){
         return this.mascotas.push(tipo)
