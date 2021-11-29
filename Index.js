@@ -1,52 +1,20 @@
+const fs = require ('fs');
+
+const objetos = [{nombre:'Libro1',autor:'autor1',imagen:'imagen'},
+                {nombre:'Libro2',autor:'autor2',imagen:'imagen'},
+                {nombre:'Libro3',autor:'autor3',imagen:'imagen'}]
 
 
-class Usuario  {
-    constructor (nombre,apellido){
-        this.nombre = nombre;
-        this.apellido = apellido;
-        this.libros = [];
-        this.mascotas = [];
-    }
-     getFullName () {
-        return `Nombre: ${this.nombre} Apellido: ${this.apellido}`
-    }
 
-    addBook (nombre, autor){
-        this.libros.push({nombre:nombre,autor:autor})
-    }
-    countMascotas () {
-        return this.mascotas.length
-    }
-
-    getBookNames(){
-        let nombrelibros = [];
-
-            for(const obj of this.libros){
-            nombrelibros.push(obj.nombre)
-            return nombrelibros
-            }
-        }
        
-    
-
-    addMascota(tipo){
-        return this.mascotas.push(tipo)
-    }
-
-
-}
-
-let numero1 = new Usuario ("Fernando","Baumann",null,null)
-
-numero1.addBook("El señor de los anillos","Tolkien")
-numero1.addBook("Harry Potter","Rowling")
-numero1.addMascota("perro")
-numero1.addMascota("gato")
-
-console.log(numero1.getFullName())
-console.log(numero1.getBookNames())
-console.log(numero1.countMascotas())
-
-
-
-
+        fs.writeFile('./info.txt',JSON.stringify(objetos,null,2),error =>{
+            if(error){
+            throw new Error('Error al escribir info.txt')
+            }
+            else{
+                
+                console.log('Todo ok')
+            }
+ 
+        
+        })

@@ -1,0 +1,17 @@
+[
+  {
+    "nombre": "Libro1",
+    "autor": "autor1",
+    "imagen": "imagen"
+  },
+  {
+    "nombre": "Libro2",
+    "autor": "autor2",
+    "imagen": "imagen"
+  },
+  {
+    "nombre": "Libro3",
+    "autor": "autor3",
+    "imagen": "imagen"
+  }
+]
