@@ -11,39 +11,23 @@ class Contenedor {
 
  
 
-    readFile(){
-        return new Promise((resolve,reject) =>{
+readFile(){
+    return new Promise((resolve,reject) =>{
           
-            fs.promises.readFile(this.archivo,'utf-8',(error, data) => {
-                if (error) return reject(error);
-                return resolve(data);
-            })
+            fs.readFile(this.archivo,'utf-8',(error, data) => {
+                if (error){
+                 reject(error);
+                }else{
+                 resolve(JSON.parse(data));
+            }})
     })
 }
-    /*
-            .then(data => {
-                const infoData = JSON.parse(data)
-                console.log(infoData)
-                return infoData
-            })
-            .catch(err =>{
-                console.log('Error de lectura',err)
-            })
-            */
 
-    
-
+/*
   async readFile2(){
       try{
         const lectura = await fs.promises.readFile(this.archivo,'utf-8')
-        const infoData = JSON.parse(lectura);
-
-            const info = {
-                nombre : infoData.nombre,
-                autor : infoData.autor,
-                imagen : infoData.imagen            
-            }
-            return productos.push(info)
+    
             }
         
         catch(error){
@@ -51,16 +35,30 @@ class Contenedor {
         }
   
     }
-}
+    */
+
+    save(obj){
+        let registros = this.readFile()
         
+        let id = 1
+
+        let newObj = {...obj,id}
+
+        registros.push(newObj)
+
+        return registros
+    }
+}
+          
 
     const contendernuevo = new Contenedor ('./info.txt')
 
-console.log(contendernuevo.readFile()
-    .then(data => console.log(data))
-	.catch(error => console.error(error)))
+   let libro4 =  {nombre:'Libro4',autor:'autor4',imagen:'imagen'}
 
-
-console.log(contendernuevo.readFile2())
+   contendernuevo.save()
+        .then((data)=>
+        console.log(data))
+        .catch((err)=>
+        console.log(err));
 
 
