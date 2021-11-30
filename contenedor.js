@@ -39,7 +39,7 @@ readFile(){
 
     save(obj){
         let registros = this.readFile()
-        
+        //registros.length ??
         let id = 1
 
         let newObj = {...obj,id}
