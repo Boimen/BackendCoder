@@ -1,8 +1,8 @@
 const fs = require ('fs');
 
-const objetos = [{nombre:'Libro1',autor:'autor1',imagen:'imagen'},
-                {nombre:'Libro2',autor:'autor2',imagen:'imagen'},
-                {nombre:'Libro3',autor:'autor3',imagen:'imagen'}]
+const objetos = [{title:'Libro1',price:'1400',thumbnail:'imagen',id:1},
+                {title:'Libro2',price:'1500',thumbnail:'imagen',id:2},
+                {title:'Libro3',price:'1600',thumbnail:'imagen',id:3}]
 
 
 

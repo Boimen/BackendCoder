@@ -1,17 +1,20 @@
 [
   {
-    "nombre": "Libro1",
-    "autor": "autor1",
-    "imagen": "imagen"
+    "title": "Libro1",
+    "price": "1400",
+    "thumbnail": "imagen",
+    "id": 1
   },
   {
-    "nombre": "Libro2",
-    "autor": "autor2",
-    "imagen": "imagen"
+    "title": "Libro2",
+    "price": "1500",
+    "thumbnail": "imagen",
+    "id": 2
   },
   {
-    "nombre": "Libro3",
-    "autor": "autor3",
-    "imagen": "imagen"
+    "title": "Libro3",
+    "price": "1600",
+    "thumbnail": "imagen",
+    "id": 3
   }
 ]
