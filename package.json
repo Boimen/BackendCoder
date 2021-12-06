@@ -2,7 +2,8 @@
   "name": "CoderBackend",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "express.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -16,5 +17,12 @@
   "bugs": {
     "url": "https://github.com/Boimen/BackendCoder/issues"
   },
-  "homepage": "https://github.com/Boimen/BackendCoder#readme"
+  "homepage": "https://github.com/Boimen/BackendCoder#readme",
+  "dependencies": {
+    "dayjs": "^1.10.7",
+    "express": "^4.17.1",
+    "moment": "^2.29.1",
+    "momentjs": "^2.0.0",
+    "random": "^3.0.6"
+  }
 }
