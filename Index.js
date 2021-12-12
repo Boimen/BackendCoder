@@ -1,3 +1,4 @@
+/*
 const fs = require ('fs');
 
 const objetos = [{title:'Libro1',price:'1400',thumbnail:'imagen',id:1},
@@ -18,3 +19,4 @@ const objetos = [{title:'Libro1',price:'1400',thumbnail:'imagen',id:1},
  
         
         })
+/*
