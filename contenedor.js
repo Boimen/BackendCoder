@@ -78,6 +78,30 @@ import fs from 'fs'
             }
         
     }
+    async modifyById(id,title,price,thumbnail){
+      
+        try{
+            const file = await this.getAll()
+                .then((respuesta)=>
+                    respuesta)
+                .catch((error)=> 
+                    {throw new error}); 
+
+        file.map(function(dato){
+            if(dato.id == id){
+                dato.title = title,
+                dato.price = price,
+                dato.thumbnail = thumbnail
+            }
+            return dato;
+        }
+        )            
+    }   catch(error){
+        throw error;
+    }
+    }
+
+
         async deleteById(id){
             let nuevoArray = []
             try{

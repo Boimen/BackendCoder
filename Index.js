@@ -1,5 +1,5 @@
-/*
-const fs = require ('fs');
+
+import fs from "fs";
 
 const objetos = [{title:'Libro1',price:'1400',thumbnail:'imagen',id:1},
                 {title:'Libro2',price:'1500',thumbnail:'imagen',id:2},
@@ -19,4 +19,3 @@ const objetos = [{title:'Libro1',price:'1400',thumbnail:'imagen',id:1},
  
         
         })
-/*

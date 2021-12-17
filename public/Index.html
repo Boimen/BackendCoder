@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Agregar producto</h1>
+        <form action = '/api/guardar' method="POST">
+            title:<input type="text" name="title">
+            price:<input type="number" name="price">
+            thumbnail:<input type="text" name="thumbnail">
+            <button>Enviar</button>
+            </form>
+
+    
+    <h1>Modificar Producto</h1>
+        <form action = '/api/modificar/1' method="PUT">
+            id:<input type="number" name="id">
+            title:<input type="text" name="title">
+            price:<input type="number" name="price">
+            thumbnail:<input type="text" name="thumbnail">
+            <button>Enviar</button>
+            </form>
+    
+</body>
+</html>
