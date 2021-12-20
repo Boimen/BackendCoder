@@ -86,16 +86,23 @@ import fs from 'fs'
                     respuesta)
                 .catch((error)=> 
                     {throw new error}); 
+        
+        let objmodificado = null;
 
         file.map(function(dato){
             if(dato.id == id){
                 dato.title = title,
                 dato.price = price,
-                dato.thumbnail = thumbnail
+                dato.thumbnail = thumbnail,
+                file.splice((file.indexOf(dato)),dato)
+                objmodificado = dato
             }
-            return dato;
+     
         }
-        )            
+        ) 
+
+        fs.writeFileSync(this.archivo,JSON.stringify(file,null,2),'utf-8')   
+        return objmodificado      
     }   catch(error){
         throw error;
     }
@@ -103,7 +110,6 @@ import fs from 'fs'
 
 
         async deleteById(id){
-            let nuevoArray = []
             try{
 
                 const file = await this.getAll()
@@ -111,41 +117,41 @@ import fs from 'fs'
                             respuesta)
                     .catch((error)=> 
                         {throw new error});
+                
+                const objetos = await this.getById(id)
+                    .then((respuesta)=>
+                            respuesta)
+                    .catch((error)=> 
+                            {throw new error}); 
 
+                
+                
                 let borrado = false
-                for(let x = 0;x<file.length;x++){
-                        if(file[x].id == id){
-                            let eliminado = file.splice(file[x],1)
-                            borrado = true
-                            fs.writeFileSync(this.archivo,JSON.stringify(file,null,2),'utf-8')
 
-                        }}
-
-                //Actualizar lista de objetos con ids nuevos 
-
-                        if(borrado){
-                            for(let x = 0;x<file.length;x++){
-                                let objetoNuevo = {
-                                    title: file[x].title,
-                                    price: file[x].price,
-                                    thumbnail : file[x].thumbnail,
-                                    id: x+1}
-                                    nuevoArray.push(objetoNuevo)
-                                    
-                        }
-                        fs.writeFileSync(this.archivo,JSON.stringify(nuevoArray,null,2))
-
+                /*if(objeto){
+                    file.splice(file.indexOf(objeto),1){
+                    borrado = true;
                     }
-                    console.log(nuevoArray)
-                    
-                        
-                    
-                    return borrado;          
+                }*/
 
+                for(let x = 0; x<file.length; x++){
+                        if(file[x].id == id){
+                            file.splice(x,1)
+
+                            borrado = true
+          
+                        }}
+                    fs.writeFileSync(this.archivo,JSON.stringify(file,null,2),'utf-8')
+                    return borrado;
+                
+
+                
+           
             }catch(error){
                 throw error;
         
     } 
+    
     }
     async deleteAll(){
             fs.unlink(this.archivo,error =>{
@@ -163,8 +169,8 @@ import fs from 'fs'
 
     
         //Imprimir objetos
-        contendernuevo.getAll()
-        .then((res) => console.log(res));
+        //contendernuevo.getAll()
+        //.then((res) => console.log(res));
 
         //Metodo para agregar objeto
         //contendernuevo.save({title: 'Libro4', price: 1400.45, thumbnail: 'https://webdeimagenes.com/archivo.png'});
@@ -179,6 +185,9 @@ import fs from 'fs'
 
         //Borrar archivo
         //contendernuevo.deleteAll()
+        //.then((res) => console.log(res));
+
+        //contendernuevo.modifyById(3,'libro20',2000,'foto')
         //.then((res) => console.log(res));
 
 export default Contenedor;

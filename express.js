@@ -1,7 +1,7 @@
 import express from 'express'
 import Contenedor from './contenedor.js'
 import randomItem from 'random-item'
-import e from 'express';
+
 
 const contenedor1 = new Contenedor ('./info.txt')
 
@@ -58,26 +58,32 @@ RouterProductos.get('/productos/:id',async (req,res)=>{
 })
 
 RouterProductos.put('/modificar/:id', async (req,res)=>{
-    let id = req.params.id
-    let busqueda = await contenedor1.getById(id)
+    let {id} = req.params
 
-    if (busqueda){
-    contenedor1.modifyById(id)
-    res.send('Producto modificado')
-    }else{
-        res.send('Producto inexistente')
+    try{
+    let modificar = await contenedor1.modifyById(id,req.body.title,req.body.price,req.body.thumbnail)
+        if(modificar){
+            res.send(modificar)
+        }else{
+            res.send('Producto inexistente')
+    }}catch(err){
+        console.log(err)
     }
+    
 })
 
-RouterProductos.delete('/borrar/:id', async (req,res)=>{
-    let id = req.params.id
-    let borrado = await contenedor1.deleteById(id)
-
-    if (borrado){
-    res.send(borrado)
-    }else{
-        res.send('Producto inexistente')
+RouterProductos.get('/borrar/:id', async (req,res)=>{
+    const { id } = req.params
+    try {
+        let borrado = await contenedor1.deleteById(id)
+        if (borrado){
+            res.send(borrado)
+        }else{
+            res.send('Producto inexistente')
+        }
+        
+    } catch (err) {
+        console.log(err)
     }
 })
-
 
