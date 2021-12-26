@@ -1,5 +1,5 @@
 
-import fs from 'fs' 
+const fs = require ("fs")
 
     const productos = []
 
@@ -112,28 +112,32 @@ import fs from 'fs'
         async deleteById(id){
             try{
 
+                let idbusqueda = id;
+
                 const file = await this.getAll()
                     .then((respuesta)=>
                             respuesta)
                     .catch((error)=> 
                         {throw new error});
-                
-                const objetos = await this.getById(id)
+
+                /*     const obj = await this.getById(idbusqueda)
                     .then((respuesta)=>
                             respuesta)
                     .catch((error)=> 
-                            {throw new error}); 
+                        {throw new error});   
 
-                
-                
-                let borrado = false
 
-                /*if(objeto){
-                    file.splice(file.indexOf(objeto),1){
-                    borrado = true;
-                    }
-                }*/
+               const eliminar = Object.keys(file).reduce((acc , objeto) =>{
+                   if(objeto !== obj){
+                    acc[objeto] = file[objeto]
+                   }
+                   return acc
+               },[])
 
+             console.log(eliminar)
+             fs.writeFileSync(this.archivo,JSON.stringify(eliminar,null,2),'utf-8')*/
+
+                let borrado = false;
                 for(let x = 0; x<file.length; x++){
                         if(file[x].id == id){
                             file.splice(x,1)
@@ -190,4 +194,4 @@ import fs from 'fs'
         //contendernuevo.modifyById(3,'libro20',2000,'foto')
         //.then((res) => console.log(res));
 
-export default Contenedor;
+module.exports = Contenedor;

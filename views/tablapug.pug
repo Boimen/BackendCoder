@@ -1,0 +1,23 @@
+if(renderProductos.length > 0)
+
+    div(class='table-responsive')
+        table(class='table table-dark')
+            tr(style='color: white')
+
+            th Title
+            th price
+            th thumbnail
+            th id
+
+            each producto in renderProductos
+
+                tr
+
+                td=producto.title
+                td=producto.price
+                td=producto.thumbnail
+                td=producto.id
+
+
+else
+    h2 no hay datos

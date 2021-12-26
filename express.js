@@ -1,16 +1,40 @@
-import express from 'express'
-import Contenedor from './contenedor.js'
-import randomItem from 'random-item'
+const express = require ("express");
+const Contenedor = require ("./contenedor.js");
+const handlebars = require ("express-handlebars");
 
-
-const contenedor1 = new Contenedor ('./info.txt')
 
 const app = express();
 const {Router} = express;
 
+//Handlebar Config
+/*
+const hbs = handlebars.create({
+    extname:".hbs",
+    defaultLayout: 'Index.hbs',
+    layoutsDir: __dirname + "/public",
+    partialsDir: __dirname + '/views'
+})
+app.engine("hbs", hbs.engine);
+app.set('view engine','hbs');
+*/
+
+const contenedor1 = new Contenedor ('./info.txt')
+
+
+
+
+
+app.set('views','./views');
+app.set('view engine','pug');
+//app.set('view engine','ejs');
+
+
+
+
 const RouterProductos = Router()
 
-const PORT = 8181;
+
+const PORT = process.env.PORT || 8080
 
 app.use('/api',RouterProductos)
 RouterProductos.use(express.json())
@@ -32,18 +56,19 @@ RouterProductos.get('/productos', async (req,res)=>{
     console.log(productos)
 })
 
+/*
 RouterProductos.get('/productoRandom',async (req,res)=>{
     const productosRandom = await contenedor1.getAll()
     res.send(randomItem(productosRandom));
     console.log(productosRandom)
 })
-
+*/
 
 
 RouterProductos.post('/guardar', async (req,res)=>{
 
     contenedor1.save(req.body)
-    res.json(req.body)
+    res.redirect('/api')
 })
 
 RouterProductos.get('/productos/:id',async (req,res)=>{
@@ -87,3 +112,60 @@ RouterProductos.get('/borrar/:id', async (req,res)=>{
     }
 })
 
+//PUG
+
+RouterProductos.get('/hellopug', async (req,res)=>{
+    try{
+        const renderProductos = await contenedor1.getAll()
+        res.render('hellopug', {renderProductos});
+        }catch(err){
+            console.log(err)
+        }
+})
+
+RouterProductos.post('/guardarpug', async (req,res)=>{
+
+    contenedor1.save(req.body)
+    res.redirect('/api/hellopug')
+})
+
+
+
+//Ejs
+/*
+RouterProductos.get('/', async (req,res)=>{
+    try{
+    const renderProductos = await contenedor1.getAll()
+    res.render('hello', {renderProductos});
+    }catch(err){
+        console.log(err)
+    }
+})
+
+RouterProductos.post('/guardarejs', async (req,res)=>{
+
+    contenedor1.save(req.body)
+    res.redirect('/api')
+})
+*/
+
+
+//Plantillas
+
+/*
+RouterProductos.get('/plantilla', async (req,res)=>{
+    try{
+        const renderProductos = await contenedor1.getAll()
+        res.render('datos', {renderProductos});
+        }catch(err){
+            console.log(err)
+        }
+        
+})
+
+RouterProductos.post('/guardarplantilla', async (req,res)=>{
+
+    contenedor1.save(req.body)
+    res.redirect('/api/plantilla')
+})
+*/
