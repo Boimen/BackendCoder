@@ -7,6 +7,7 @@ const io = require ('socket.io')(servidor)
 
 
 const {Router} = express;
+app.use(express.static('public'))
 
 
 //Handlebar Config
@@ -45,13 +46,9 @@ const server = servidor.listen(PORT,()=>{
 });
 
 app.use('/api',RouterProductos)
+
 RouterProductos.use(express.json())
 RouterProductos.use(express.urlencoded({extended:true}))
-
-app.use(express.static('public'))
-
-
-
 
 server.on("error",error=> console.log(`Error en servidor ${error}`));
 
@@ -180,43 +177,16 @@ RouterProductos.post('/guardarplantilla', async (req,res)=>{
 
 let messages = []
 
-let socket = io.connect();
 
-io.on('conection', function(socket){
+io.on('connection', function(socket){
     console.log('Cliente nuevo')
-    socket.emit('messages',messages )
+    socket.emit('messages', messages )
 
-    socket.on('new-message', data =>{
+    socket.on('new-message', function (data) {
         messages.push(data);
         io.sockets.emit('messages',messages);
     })
+    console.log(messages)
 })
 
 
-
-
-socket.on('messages', data =>{
-    alert('escuchando')
-})
-
-function render(data){
-    const html = data.map((elem, index) =>{
-        return (`<div>
-        <strong> ${elem.title}</strong>:
-        <em> ${elem.text}</em>
-        </div`)
-    }).join(" ")
-    document.getElementById('messages').innerHTML = html;
-
-}
-
-function addMessage(e){
-    const mensaje = {
-        author: document.getElementById('username').value,
-        text: document.getElementById('texto').value
-    };
-    socket.emit('new-message',mensaje);
-    return false;
-}
-
-socket.on('messages' , function(data) {render(data);})
