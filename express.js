@@ -1,25 +1,14 @@
 const express = require ('express');
 const app = express();
 const Contenedor = require ("./contenedor.js");
-const handlebars = require ("express-handlebars");
 const servidor = require ('http').Server(app)
 const io = require ('socket.io')(servidor)
+const moment = require ('moment')
 
 
 const {Router} = express;
 app.use(express.static('public'))
 
-
-//Handlebar Config
-
-const hbs = handlebars.create({
-    extname:".hbs",
-    defaultLayout: 'Index.hbs',
-    layoutsDir: __dirname + "/public",
-    partialsDir: __dirname + '/views'
-})
-app.engine("hbs", hbs.engine);
-app.set('view engine','hbs');
 
 
 const contenedor1 = new Contenedor ('./info.txt')
@@ -28,9 +17,8 @@ const contenedor1 = new Contenedor ('./info.txt')
 
 
 
-app.set('views','./views');
-//app.set('view engine','pug');
-//app.set('view engine','ejs');
+app.set('views','./public');
+app.set('view engine','ejs');
 
 
 
@@ -114,31 +102,14 @@ RouterProductos.get('/borrar/:id', async (req,res)=>{
     }
 })
 
-//PUG
-/*
-RouterProductos.get('/hellopug', async (req,res)=>{
-    try{
-        const renderProductos = await contenedor1.getAll()
-        res.render('hellopug', {renderProductos});
-        }catch(err){
-            console.log(err)
-        }
-})
 
-RouterProductos.post('/guardarpug', async (req,res)=>{
-
-    contenedor1.save(req.body)
-    res.redirect('/api/hellopug')
-})
-
-*/
 
 //Ejs
-/*
+
 RouterProductos.get('/', async (req,res)=>{
     try{
     const renderProductos = await contenedor1.getAll()
-    res.render('hello', {renderProductos});
+    res.render('Index', {renderProductos});
     }catch(err){
         console.log(err)
     }
@@ -149,27 +120,7 @@ RouterProductos.post('/guardarejs', async (req,res)=>{
     contenedor1.save(req.body)
     res.redirect('/api')
 })
-*/
 
-
-//Plantillas
-
-
-RouterProductos.get('/plantilla', async (req,res)=>{
-    try{
-        const renderProductos = await contenedor1.getAll()
-        res.render('datos', {renderProductos});
-        }catch(err){
-            console.log(err)
-        }
-        
-})
-
-RouterProductos.post('/guardarplantilla', async (req,res)=>{
-
-    contenedor1.save(req.body)
-    res.redirect('/api/plantilla')
-})
 
 
 

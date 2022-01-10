@@ -16,23 +16,5 @@
     "price": "1600",
     "thumbnail": "https://cdn1.iconfinder.com/data/icons/address-book-providers-in-colors/512/macoscontacts-1024.png",
     "id": 3
-  },
-  {
-    "title": "Libro4",
-    "price": "5000",
-    "thumbnail": " \thttps://cdn1.iconfinder.com/data/icons/address-book-providers-in-colors/512/macoscontacts-1024.png",
-    "id": 4
-  },
-  {
-    "title": "Libro5",
-    "price": "6000",
-    "thumbnail": "https://cdn1.iconfinder.com/data/icons/address-book-providers-in-colors/512/macoscontacts-1024.png",
-    "id": 5
-  },
-  {
-    "title": "Libro6",
-    "price": "7999",
-    "thumbnail": "https://cdn1.iconfinder.com/data/icons/address-book-providers-in-colors/512/macoscontacts-1024.png",
-    "id": 6
   }
 ]
