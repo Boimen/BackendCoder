@@ -1,0 +1,39 @@
+[
+  {
+    "id": 1,
+    "date": "2022-01-13T23:46:58.823Z",
+    "productos": []
+  },
+  {
+    "id": 2,
+    "date": "2022-01-13T23:47:00.013Z",
+    "productos": [
+      {
+        "title": "Libro2",
+        "price": "1500",
+        "thumbnail": "https://cdn1.iconfinder.com/data/icons/address-book-providers-in-colors/512/macoscontacts-1024.png",
+        "id": 2,
+        "stock": 100
+      },
+      {
+        "title": "Libro2",
+        "price": "1500",
+        "thumbnail": "https://cdn1.iconfinder.com/data/icons/address-book-providers-in-colors/512/macoscontacts-1024.png",
+        "id": 2,
+        "stock": 100
+      },
+      {
+        "title": "Libro3",
+        "price": "1600",
+        "thumbnail": "https://cdn1.iconfinder.com/data/icons/address-book-providers-in-colors/512/macoscontacts-1024.png",
+        "id": 3,
+        "stock": 100
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "date": "2022-01-13T23:47:00.739Z",
+    "productos": []
+  }
+]

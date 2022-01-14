@@ -112,8 +112,6 @@ const fs = require ("fs")
         async deleteById(id){
             try{
 
-                let idbusqueda = id;
-
                 const file = await this.getAll()
                     .then((respuesta)=>
                             respuesta)
@@ -137,19 +135,15 @@ const fs = require ("fs")
              console.log(eliminar)
              fs.writeFileSync(this.archivo,JSON.stringify(eliminar,null,2),'utf-8')*/
 
-                let borrado = false;
+          
                 for(let x = 0; x<file.length; x++){
                         if(file[x].id == id){
                             file.splice(x,1)
 
-                            borrado = true
+           
           
                         }}
                     fs.writeFileSync(this.archivo,JSON.stringify(file,null,2),'utf-8')
-                    return borrado;
-                
-
-                
            
             }catch(error){
                 throw error;

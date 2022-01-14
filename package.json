@@ -19,6 +19,10 @@
   },
   "homepage": "https://github.com/Boimen/BackendCoder#readme",
   "dependencies": {
+    "@babel/cli": "^7.16.8",
+    "@babel/core": "^7.16.7",
+    "@babel/preset-env": "^7.16.8",
+    "@types/express": "^4.17.13",
     "dayjs": "^1.10.7",
     "ejs": "^3.1.6",
     "engine": "^1.0.0",
@@ -32,5 +36,12 @@
     "random-item": "^4.0.1",
     "randomstring": "^1.2.1",
     "socket.io": "^4.4.1"
+  },
+  "devDependencies": {
+    "ts-loader": "^9.2.6",
+    "typescript": "^4.5.4",
+    "webpack": "^5.66.0",
+    "webpack-cli": "^4.9.1",
+    "webpack-node-externals": "^3.0.0"
   }
 }

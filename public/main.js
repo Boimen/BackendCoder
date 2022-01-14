@@ -36,7 +36,6 @@ function addMessage(e){
     document.getElementById('texto').focus()
 
     return false;
-
 }
 
 

@@ -1,0 +1,28 @@
+
+
+<% if(renderCarrito.productos.length > 0){ %>
+    <div class="d-flex justify-content-center p-5">
+        <h1>Carrito id:<%=renderCarrito.id%></h1>
+    </div>
+    <% renderCarrito.productos.forEach(function(producto){%>
+
+        <div class="col d-flex justify-content-center">
+            
+                <div class="card col-6" style="width: 18rem;">
+                    <img>
+                    <div class="card-body">
+                        <h1>Producto<%=renderCarrito.productos.indexOf(producto)+1%></h1>
+                        <p class="card-text">
+                            <%=producto.price%>
+                            <%=producto.thumbnail%>
+                        </p>
+                    </div>
+                </div>
+        </div>
+    <% });%>
+
+    <% } else { %>
+        <div class="d-flex justify-content-center p-5">
+            <h1>No hay datos</h1>
+        </div>
+    <% } %>

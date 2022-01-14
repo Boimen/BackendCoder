@@ -5,7 +5,9 @@
             <th>Title</th>
             <th>price</th>
             <th>thumbnail</th>
+            <th>stock</th>
             <th>id</th>
+            <th></th>
 
                 <% renderProductos.forEach(function(producto){%>
             <tr>
@@ -13,7 +15,12 @@
             <td><%=producto.title%></td>
             <td><%=producto.price%></td>
             <td><%=producto.thumbnail%></td>
+            <td><%=producto.stock%></td>
             <td><%=producto.id%></td>
+            <td><form action= "api/borrar/id" method="GET">
+                <button class="btn btn-danger mt-3 mb-5">Eliminar</button>
+            </form>
+            <td>
         </tr>
         <% });%>
     </table>
