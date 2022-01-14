@@ -17,7 +17,7 @@
             <td><%=producto.thumbnail%></td>
             <td><%=producto.stock%></td>
             <td><%=producto.id%></td>
-            <td><form action= "api/borrar/id" method="GET">
+            <td><form action= "api/borrar/<%=producto.id %>" method="GET">
                 <button class="btn btn-danger mt-3 mb-5">Eliminar</button>
             </form>
             <td>
