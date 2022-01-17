@@ -78,7 +78,7 @@ const fs = require ("fs")
             }
         
     }
-    async modifyById(id,title,price,thumbnail){
+    async modifyById(id,body){
       
         try{
             const file = await this.getAll()
@@ -91,9 +91,10 @@ const fs = require ("fs")
 
         file.map(function(dato){
             if(dato.id == id){
-                dato.title = title,
-                dato.price = price,
-                dato.thumbnail = thumbnail,
+                dato.title = body.title,
+                dato.price = body.price,
+                dato.thumbnail = body.thumbnail,
+                dato.stock = body.stock;
                 file.splice((file.indexOf(dato)),dato)
                 objmodificado = dato
             }
@@ -139,9 +140,6 @@ const fs = require ("fs")
                 for(let x = 0; x<file.length; x++){
                         if(file[x].id == id){
                             file.splice(x,1)
-
-           
-          
                         }}
                     fs.writeFileSync(this.archivo,JSON.stringify(file,null,2),'utf-8')
            

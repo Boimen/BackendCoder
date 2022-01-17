@@ -133,7 +133,8 @@ class Carritos {
             }
         
     }
-    async deleteproductById (id,producto){
+
+    async deleteproductById (id,productoid){
 
                 const file = await this.getAll()
                 .then((respuesta)=>
@@ -141,16 +142,22 @@ class Carritos {
                 .catch((error)=> 
                     {throw new error});
 
-                    let objmodificado = null;
-                
+                    let encontrado = null;
+
                     file.map(function(dato){
                             if(dato.id == id){
-                                (dato.productos).remove(producto),
-                                file.splice((file.indexOf(dato)),dato)
-    
-                                objmodificado = dato
-    
+                                encontrado = dato
                             }})
+
+                    encontrado.productos.map(function(producto){
+                            if(producto.id == productoid){
+                                encontrado.productos.splice(encontrado.productos.indexOf(producto),1)
+                                }})
+
+
+          
+                fs.writeFileSync(this.archivo,JSON.stringify(file,null,2),'utf-8')   
+                return encontrado
                 
         }
     }

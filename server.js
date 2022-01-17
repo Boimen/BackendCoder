@@ -5,7 +5,7 @@ const servidor = require ('http').Server(app)
 const io = require ('socket.io')(servidor)
 const Carritos = require ('./Carritos.js');
 
-
+let admin = false;
 
 const {Router} = express;
 app.use(express.static('public'))
@@ -80,7 +80,8 @@ RouterProductos.put('/modificar/:id', async (req,res)=>{
     let {id} = req.params
 
     try{
-    let modificar = await contenedor1.modifyById(id,req.body.title,req.body.price,req.body.thumbnail)
+        res.send(req.body)
+    //let modificar = await contenedor1.modifyById(id,req.body)
         if(modificar){
             res.send(modificar)
         }else{
@@ -89,6 +90,11 @@ RouterProductos.put('/modificar/:id', async (req,res)=>{
         console.log(err)
     }
     
+})
+
+RouterProductos.get('/modificar/producto/:id', async (req,res)=>{
+    let {id} = req.params
+    res.render('modificarproducto',{id})
 })
 
 RouterProductos.get('/borrar/:id', async (req,res)=>{
@@ -220,22 +226,20 @@ RouterCarrito.get('/Carrito/:carritoid/borrar/:idproducto', async (req,res)=>{
     const carritoid  = req.params.carritoid
     const productoid  = req.params.idproducto
 
-
  
     try {
 
-        let busqueda = await contenedorcarritos1.getById(carritoid,productoid)
-
-        if (busqueda){
-            res.send(busqueda)
-        }else{
-            res.send('Producto inexistente')
-        }
+        let borradodecarrito = await contenedorcarritos1.deleteproductById(carritoid,productoid)
+        res.redirect('back')
+     
         
-    } catch (err) {
-        console.log(err)
-    }
+        } catch (err) {
+
+            res.send('Invalido')
+        }
+
 })
+
 
 
 

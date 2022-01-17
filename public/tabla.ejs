@@ -8,19 +8,24 @@
             <th>stock</th>
             <th>id</th>
             <th></th>
+            <th></th>
 
                 <% renderProductos.forEach(function(producto){%>
             <tr>
 
             <td><%=producto.title%></td>
             <td><%=producto.price%></td>
-            <td><%=producto.thumbnail%></td>
+            <td><img src="<%=producto.thumbnail%>" alt="" style: width="100"></td>
             <td><%=producto.stock%></td>
             <td><%=producto.id%></td>
-            <td><form action= "api/borrar/<%=producto.id %>" method="GET">
+            <td><form action= "/api/borrar/<%=producto.id %>" method="GET">
                 <button class="btn btn-danger mt-3 mb-5">Eliminar</button>
-            </form>
-            <td>
+            </td>
+            <td></form>
+                <form action= "api/modificar/producto/<%=producto.id %>" method="GET">
+                    <button class="btn btn-secondary mt-3 mb-5">Modificar</button>
+                </form>
+            </td>
         </tr>
         <% });%>
     </table>

@@ -10,12 +10,26 @@
             
                 <div class="card col-6" style="width: 18rem;">
                     <img>
-                    <div class="card-body">
-                        <h1>Producto<%=renderCarrito.productos.indexOf(producto)+1%></h1>
-                        <p class="card-text">
-                            <%=producto.price%>
-                            <%=producto.thumbnail%>
-                        </p>
+                    <div class="card-body p-5">
+
+                        <h1>Producto<%=renderCarrito.productos.indexOf(producto)+1%></h1><br>
+
+                            <p class="card-text">
+                                Precio: <%=producto.price%><hr>
+                                Id producto: <%=producto.id%><hr>
+                            </p>
+                            
+                            <div class="d-flex justify-content-center">
+                            <img src="<%=producto.thumbnail%>" style: width="75"><hr>
+                            </div>
+
+                            <div class="d-flex justify-content-center">
+                            <form action= "<%=renderCarrito.id%>/borrar/<%=producto.id %>" method="GET">
+                                <button class="btn btn-danger mt-3 mb-5">Eliminar</button>
+                            </form>
+                            </div>
+
+                       
                     </div>
                 </div>
         </div>
