@@ -5,6 +5,7 @@ const servidor = require ('http').Server(app)
 const io = require ('socket.io')(servidor)
 const Carritos = require ('./Carritos.js');
 const {knex} = require('./db/database')
+const {options} = require ('./db/sqlite3')
 const Contenedordb = require('./contenedordb.js');
 
 
@@ -24,6 +25,15 @@ knex.schema.createTable('productos', (table) => {
 .then(()=> console.log("Tabla creada"))
 .catch(()=> console.log(error))
 */
+
+options.schema.createTable('mensajes', (table) => {
+    table.varchar('author')
+    table.date('fecha')
+    table.text('texto')
+})
+    .then(()=> console.log("Tabla creada"))
+    .catch(()=> console.log(error)) 
+
 
 
 const contenedor1 = new Contenedor ('./info.txt')
@@ -155,7 +165,7 @@ RouterProductos.post('/guardarejs', async (req,res)=>{
 
 //Io
 
-let messages = []
+knexsqlite
 
 
 io.on('connection', function(socket){

@@ -42,7 +42,6 @@ const objetos = [   {title:'Libro1',price:'1400',thumbnail: src='https://cdn1.ic
                 throw error
 
             }
-            return console.log(this.tabla)
             }
 
         async getAll(){
