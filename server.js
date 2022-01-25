@@ -4,17 +4,31 @@ const Contenedor = require ("./contenedor.js");
 const servidor = require ('http').Server(app)
 const io = require ('socket.io')(servidor)
 const Carritos = require ('./Carritos.js');
+const {knex} = require('./db/database')
+const Contenedordb = require('./contenedordb.js');
+
 
 let admin = false;
 
 const {Router} = express;
 app.use(express.static('public'))
 
+/*
+knex.schema.createTable('productos', (table) => {
+    table.string('title')
+    table.float('price')
+    table.string('thumbnail');
+    table.integer('stock')
+    table.increments('id')
+})
+.then(()=> console.log("Tabla creada"))
+.catch(()=> console.log(error))
+*/
 
 
 const contenedor1 = new Contenedor ('./info.txt')
 const contenedorcarritos1 = new Carritos ('./Carritos.txt',[])
-
+const contenedordb1 = new Contenedordb(knex,'productos');
 
 app.set('views','./public');
 app.set('view engine','ejs');
@@ -122,9 +136,12 @@ RouterProductos.get('/', async (req,res)=>{
     try{
     const renderProductos = await contenedor1.getAll()
     res.render('Index', {renderProductos});
+
+
     }catch(err){
         console.log(err)
     }
+  
 })
 
 RouterProductos.post('/guardarejs', async (req,res)=>{
@@ -239,7 +256,4 @@ RouterCarrito.get('/Carrito/:carritoid/borrar/:idproducto', async (req,res)=>{
         }
 
 })
-
-
-
 

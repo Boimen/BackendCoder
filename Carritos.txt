@@ -11,5 +11,23 @@
         "stock": 100
       }
     ]
+  },
+  {
+    "id": 2,
+    "date": "2022-01-24T03:01:02.585Z",
+    "productos": [
+      {
+        "title": "Libro1",
+        "price": "1400",
+        "thumbnail": "https://cdn1.iconfinder.com/data/icons/address-book-providers-in-colors/512/macoscontacts-1024.png",
+        "id": 1,
+        "stock": 100
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "date": "2022-01-24T03:01:04.666Z",
+    "productos": []
   }
 ]

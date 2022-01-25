@@ -12,12 +12,5 @@
     "thumbnail": "https://cdn1.iconfinder.com/data/icons/address-book-providers-in-colors/512/macoscontacts-1024.png",
     "id": 2,
     "stock": 100
-  },
-  {
-    "title": "Libro3",
-    "price": "1600",
-    "thumbnail": "https://cdn1.iconfinder.com/data/icons/address-book-providers-in-colors/512/macoscontacts-1024.png",
-    "id": 3,
-    "stock": 100
   }
 ]
