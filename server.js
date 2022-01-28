@@ -25,15 +25,15 @@ knex.schema.createTable('productos', (table) => {
 .then(()=> console.log("Tabla creada"))
 .catch(()=> console.log(error))
 */
-
+/*
 options.schema.createTable('mensajes', (table) => {
     table.varchar('author')
     table.date('fecha')
-    table.text('texto')
+    table.text('text')
 })
     .then(()=> console.log("Tabla creada"))
-    .catch(()=> console.log(error)) 
-
+    .catch(error => console.log(error)) 
+*/
 
 
 const contenedor1 = new Contenedor ('./info.txt')
@@ -165,18 +165,23 @@ RouterProductos.post('/guardarejs', async (req,res)=>{
 
 //Io
 
-knexsqlite
 
+let messages = []
 
 io.on('connection', function(socket){
     console.log('Cliente nuevo')
     socket.emit('messages', messages )
 
-    socket.on('new-message', function (data) {
+    socket.on('new-message', function (messages) {
+        options('mensajes').insert(messages)
+                .then(()=>console.log('Mensaje insertado'))
+                .catch(err => {console.log(err); throw err})
+                
         messages.push(data);
-        io.sockets.emit('messages',messages);
     })
-    console.log(messages)
+        io.sockets.emit('messages',messages);
+  
+        console.log(messages)
 })
 
 

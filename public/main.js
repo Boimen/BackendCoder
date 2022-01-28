@@ -28,7 +28,7 @@ function addMessage(e){
     let mensaje = {
         author: document.getElementById('username').value,
         fecha: date,
-        text: document.getElementById('texto').value
+        texto: document.getElementById('texto').value
     };
     socket.emit('new-message',mensaje);
 
