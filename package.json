@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "express.js",
-  "type": "commonjs",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -28,10 +28,12 @@
     "engine": "^1.0.0",
     "express": "^4.17.2",
     "express-handlebars": "^6.0.2",
+    "firebase-admin": "^10.0.2",
     "http": "0.0.1-security",
     "knex": "^0.95.15",
     "moment": "^2.29.1",
     "momentjs": "^2.0.0",
+    "mongoose": "^6.2.0",
     "mysql": "^2.18.1",
     "pug": "^3.0.2",
     "random": "^3.0.6",
