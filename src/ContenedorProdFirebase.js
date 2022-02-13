@@ -5,13 +5,27 @@ class ContenedorProd {
     this.query = query
     }
 
+    async getLastFromList() {
+        try{
+            this.query.limitToLast(1).once('id')
+            .then(function(snapshot) {
+            snapshot.forEach(function(childSnapshot) {
+                return (childSnapshot.val());
+            });
+        });
+        }catch(err){
+            console.log(err)
+        }
+        }
+
     async agregarproducto(objeto){
-        let id =  2;
+        let snapshot = await getLastFromList()
+        let id = snapshot +1 ;
         let doc = this.query.doc(`${id}`)
         doc.create(objeto)
-        id;;
         return console.log('Insertado')
     }
+
     async mostrar(){
         const querySnapshot = await this.query.get()
         let docs = querySnapshot.docs;
@@ -19,9 +33,12 @@ class ContenedorProd {
         const respuesta = docs.map(doc=>({
             id:doc.id,
             title:doc.data().title,
-            price:doc.data().price
+            price:doc.data().price,
+            thumbnail:doc.data().thumbnail,
+            stock:doc.data().stock
+
         }))
-        console.log(respuesta)
+        return (respuesta)
     }
     async buscarporNombre(title){
         const querySnapshot = await this.query.where('title','==',title).get()

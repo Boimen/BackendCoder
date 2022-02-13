@@ -1,5 +1,5 @@
-import mongoose from 'mongoose'
-import * as model from './public/ContenedorProducto.js'
+const mongoose = require ('mongoose')
+const model = require ('./public/ContenedorProducto.js')
 
 class ContenedorProducto{
     constructor(){}
@@ -47,4 +47,4 @@ class ContenedorProducto{
 
     
 
-export default ContenedorProducto
+module.exports = ContenedorProducto

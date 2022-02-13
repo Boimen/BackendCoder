@@ -1,5 +1,5 @@
-const fs = require ("fs")
-const server = require ('./server.js')
+const server = require ('../server.js')
+let admin = require("firebase-admin");
 
 class Carrito {
     constructor(id,date,productos){
@@ -10,49 +10,56 @@ class Carrito {
 }
 
 class Carritos {
-    constructor(archivo,Carrito){
-    this.archivo = archivo;
+    constructor(query,Carrito){
+    this.query = query;
     this.Carrito = Carrito;
     }
 
 
 
     async getAll(){
-        try{
-            const lectura = await fs.promises.readFile(this.archivo,'utf-8')
-                if(!lectura){
-                    return fs.writeFileSync(this.archivo,JSON.stringify([]),null,2)
-                }
-                const datos = JSON.parse(lectura);
-                return datos;
-                }
-                catch(error){
-                    throw error;
-                }
-    }
+                const querySnapshot = await this.query.get()
+                let docs = querySnapshot.docs;
+        
+                const respuesta = docs.map(doc=>({
+                    id:doc.id,
+                    date:doc.data().date,
+                    productos:doc.data().productos
+                }))
+                return (respuesta)
+            }
+
+
+    async getLastFromList() {
+                this.query.limitToLast(1).once(id)
+                    .then(function(snapshot) {
+                    snapshot.forEach(function(childSnapshot) {
+                        return(childSnapshot.val());
+             });
+        });
+              }
+
 
     async crearCarrito () {
-
-        try{    
-            const file = await this.getAll()
-                    .then((respuesta)=>
-                        respuesta)
-                    
-                    let nuevoid = file.length + 1
+   
+                    let snapshot = await getLastFromList()
+                    let id = snapshot +1 ;
                     let nuevocarrito = new Carrito(nuevoid,new Date(),[])
-                        /*const momento = new Date();
-                        let objetosencarrito = file.length
+                    let doc = this.query.doc(`${id}`);
+                    doc.create(nuevocarrito)
+                    return console.log('Insertado')
+
+                        /*let objetosencarrito = file.length
                             nuevocarrito.id = objetosencarrito + 1;
                             nuevocarrito.date = momento;
-                            nuevocarrito.productos = []*/
+                            nuevocarrito.productos = []
                                 file.push(nuevocarrito)
                                 const datos = JSON.stringify(file)
                                 fs.writeFileSync(this.archivo,JSON.stringify(file,null,2),'utf-8')
                                 return file;
+                        */
 
-    }catch(error){
-        throw error;
-    }
+  
 }
     async deleteById (id){
 

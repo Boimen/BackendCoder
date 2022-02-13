@@ -1,44 +1,37 @@
 const express = require ('express');
 const app = express();
-const Contenedor = require ("./contenedor.js");
 const servidor = require ('http').Server(app)
 const io = require ('socket.io')(servidor)
-const Carritos = require ('./Carritos.js');
-const {knex} = require('./db/database')
-const {options} = require ('./db/sqlite3')
-const Contenedordb = require('./contenedordb.js');
+const Carritos = require ('./src/Carritos.js');
+const ContenedorFirebase = require ('./src/ContenedorProdFirebase.js');
+const ContenedorMensajes = require ('./src/ContenedorMensajes')
+let admin = require("firebase-admin");
+const { normalize, schema } = require("normalizr")
 
 
-let admin = false;
+let serviceAccount = require("./coderbackend-3c5d1-firebase-adminsdk-d2qrh-3781e00c29.json");
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
+
+
+    const db = admin.firestore()
+    const query = db.collection('productos')
+
+    const db2 = admin.firestore()
+    const query2 = db2.collection('Carritos')
+
+    const db3 = admin.firestore()
+    const query3 = db3.collection('Mensajes')
+
 
 const {Router} = express;
 app.use(express.static('public'))
 
-/*
-knex.schema.createTable('productos', (table) => {
-    table.string('title')
-    table.float('price')
-    table.string('thumbnail');
-    table.integer('stock')
-    table.increments('id')
-})
-.then(()=> console.log("Tabla creada"))
-.catch(()=> console.log(error))
-*/
-/*
-options.schema.createTable('mensajes', (table) => {
-    table.varchar('author')
-    table.date('fecha')
-    table.text('text')
-})
-    .then(()=> console.log("Tabla creada"))
-    .catch(error => console.log(error)) 
-*/
-
-
-const contenedor1 = new Contenedor ('./info.txt')
-const contenedorcarritos1 = new Carritos ('./Carritos.txt',[])
-const contenedordb1 = new Contenedordb(knex,'productos');
+const contenedorcarritos1 = new Carritos (query2,[])
+const Firebase = new ContenedorFirebase(query);
+const Mensajes = new ContenedorMensajes(query3)
 
 app.set('views','./public');
 app.set('view engine','ejs');
@@ -74,13 +67,6 @@ RouterProductos.get('/productos', async (req,res)=>{
     console.log(productos)
 })
 
-/*
-RouterProductos.get('/productoRandom',async (req,res)=>{
-    const productosRandom = await contenedor1.getAll()
-    res.send(randomItem(productosRandom));
-    console.log(productosRandom)
-})
-*/
 
 
 RouterProductos.post('/guardar', async (req,res)=>{
@@ -121,10 +107,10 @@ RouterProductos.get('/modificar/producto/:id', async (req,res)=>{
     res.render('modificarproducto',{id})
 })
 
-RouterProductos.get('/borrar/:id', async (req,res)=>{
-    const { id } = req.params
+RouterProductos.get('/borrar/:title', async (req,res)=>{
+    const { title } = req.params
     try {
-        let borrado = await contenedor1.deleteById(id)
+        let borrado = await Firebase.eliminarporNombre(title)
             res.redirect('/api')
         if (borrado){
             res.redirect('/api')
@@ -144,7 +130,7 @@ RouterProductos.get('/borrar/:id', async (req,res)=>{
 
 RouterProductos.get('/', async (req,res)=>{
     try{
-    const renderProductos = await contenedor1.getAll()
+    const renderProductos = await Firebase.mostrar()
     res.render('Index', {renderProductos});
 
 
@@ -156,7 +142,7 @@ RouterProductos.get('/', async (req,res)=>{
 
 RouterProductos.post('/guardarejs', async (req,res)=>{
 
-    contenedor1.save(req.body)
+    Firebase.agregarproducto(req.body)
     res.redirect('/api')
 })
 
@@ -165,6 +151,14 @@ RouterProductos.post('/guardarejs', async (req,res)=>{
 
 //Io
 
+const mensajes = await Mensajes.mostrar()
+const cantidad = Mensajes.mostrar().length
+
+const logmensajes = new schema.Entity('mensajes',{
+    id: 1,
+    cantidad: cantidad,
+    mensajes: mensajes
+})
 
 let messages = []
 
@@ -172,16 +166,14 @@ io.on('connection', function(socket){
     console.log('Cliente nuevo')
     socket.emit('messages', messages )
 
-    socket.on('new-message', function (messages) {
-        options('mensajes').insert(messages)
-                .then(()=>console.log('Mensaje insertado'))
-                .catch(err => {console.log(err); throw err})
+    socket.on('new-message', function (data) {
+
+    const nuevomensaje = Mensajes.agregarNuevo(data)
+    messages.push(data)
                 
-        messages.push(data);
     })
-        io.sockets.emit('messages',messages);
-  
-        console.log(messages)
+    io.sockets.emit('messages',messages);
+    console.log(logmensajes)
 })
 
 
