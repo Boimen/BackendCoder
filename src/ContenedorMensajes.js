@@ -4,27 +4,41 @@ class ContenedorMensajes {
     this.query = query
     }
 
-    async getLastFromList() {
-
-        this.query.limitToLast(1).once(this.query.doc.id)
+    /*async getLastFromList() {
+        try{
+        this.query.limitToLast(1)
             .then(function(snapshot) {
             snapshot.forEach(function(childSnapshot) {
                 return(childSnapshot.val());     
             })
             })
-            .catch((error) => console.log(error))
-
-    }
+    }catch(err){
+        console.log(err)
+    }*/
 
 
     async agregarNuevo (mensaje){
-        
-        let snapshot = await getLastFromList()
-        let doc = this.query.doc(`${snapshot + 1}`)
+        let doc = this.query.doc()
         doc.create(mensaje)
 
         return console.log('Insertado')
-    }   
+    }
+    
+    async traerautores(){
+        try{
+            const querySnapshot = await this.query.get()
+            let docs = querySnapshot.docs
+    
+    
+            const respuesta = docs.map(doc=>({
+                author:doc.data().author,
+            }))
+                return respuesta
+            }catch(error){
+                throw error
+            }}
+        
+    
 
     async mostrar(){
         try{
@@ -40,8 +54,8 @@ class ContenedorMensajes {
 
         }))
             return respuesta
-        }catch(err){
-            console.log(err)
+        }catch(error){
+            throw error
         }}
     }
 

@@ -7,9 +7,9 @@ const ContenedorFirebase = require ('./src/ContenedorProdFirebase.js');
 const ContenedorMensajes = require ('./src/ContenedorMensajes')
 let admin = require("firebase-admin");
 const { normalize, schema } = require("normalizr")
-
-
 let serviceAccount = require("./coderbackend-3c5d1-firebase-adminsdk-d2qrh-3781e00c29.json");
+const faker = require ('faker')
+
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
@@ -151,14 +151,29 @@ RouterProductos.post('/guardarejs', async (req,res)=>{
 
 //Io
 
-const mensajes = await Mensajes.mostrar()
-const cantidad = Mensajes.mostrar().length
+RouterProductos.get('/Normalizar', async (req,res)=>{
+    try{
+    let mensajes = await Mensajes.mostrar()
+    let participantes = await Mensajes.traerautores()
+    let querySnapshot = await query3.get()
+    let cantidad = querySnapshot.size
 
-const logmensajes = new schema.Entity('mensajes',{
-    id: 1,
-    cantidad: cantidad,
-    mensajes: mensajes
+    const logmensajes = new schema.Entity('mensajes',{
+        id: 1,
+        Participantes: participantes,
+        Cantidad_Mensajes: cantidad,
+        mensajes: mensajes
+    })
+
+    res.send({logmensajes});
+
+
+    }catch(err){
+        console.log(err)
+    }
+  
 })
+
 
 let messages = []
 
@@ -170,10 +185,9 @@ io.on('connection', function(socket){
 
     const nuevomensaje = Mensajes.agregarNuevo(data)
     messages.push(data)
+    io.sockets.emit('messages',messages);
                 
     })
-    io.sockets.emit('messages',messages);
-    console.log(logmensajes)
 })
 
 
@@ -264,3 +278,21 @@ RouterCarrito.get('/Carrito/:carritoid/borrar/:idproducto', async (req,res)=>{
 
 })
 
+//Faker
+
+agregarfake()
+
+function agregarfake(){
+
+    for(let i = 0 ; i<5 ; i++){
+    let faketitle = faker.lorem.words()
+    let fakeprice = faker.commerce.price()
+    let fakethumbnail = faker.image.avatar()
+    let fakestock = faker.random.number(15)
+    let fakeid = faker.random.uuid()
+
+    let nuevoproducto = {title:faketitle,price:fakeprice,thumbnail:fakethumbnail,id:fakeid,stock:fakestock}
+
+    Firebase.agregarproducto(nuevoproducto)
+    }
+}

@@ -5,23 +5,11 @@ class ContenedorProd {
     this.query = query
     }
 
-    async getLastFromList() {
-        try{
-            this.query.limitToLast(1).once('id')
-            .then(function(snapshot) {
-            snapshot.forEach(function(childSnapshot) {
-                return (childSnapshot.val());
-            });
-        });
-        }catch(err){
-            console.log(err)
-        }
-        }
+
 
     async agregarproducto(objeto){
-        let snapshot = await getLastFromList()
-        let id = snapshot +1 ;
-        let doc = this.query.doc(`${id}`)
+
+        let doc = this.query.doc()
         doc.create(objeto)
         return console.log('Insertado')
     }
