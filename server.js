@@ -8,7 +8,13 @@ const ContenedorMensajes = require ('./src/ContenedorMensajes')
 let admin = require("firebase-admin");
 const { normalize, schema } = require("normalizr")
 let serviceAccount = require("./coderbackend-3c5d1-firebase-adminsdk-d2qrh-3781e00c29.json");
-const faker = require ('faker')
+const faker = require ('faker');
+const { mongo } = require('mongoose');
+const MongoStore = require('connect-mongo');
+const cookieParser = require('cookie-parser');
+const session = require ('express-session')
+
+
 
 
 admin.initializeApp({
@@ -35,12 +41,24 @@ const Mensajes = new ContenedorMensajes(query3)
 
 app.set('views','./public');
 app.set('view engine','ejs');
+app.use(cookieParser())
 
 
 
 
+const RouterLogin = Router()
 const RouterProductos = Router()
 const RouterCarrito = Router()
+
+app.use(session({
+    store: MongoStore.create({mongoUrl:  "mongodb+srv://Boimen:diehose11@cluster0.lao3a.mongodb.net/myFirstDatabase?retryWrites=true&w=majority" }),
+    secret : 'Boimen',
+    resave : false,
+    saveUnintialized : false,
+    cookie: {
+        maxAge: 600000
+    }
+}))
 
 
 
@@ -53,11 +71,14 @@ const server = servidor.listen(PORT,()=>{
 
 app.use('/api',RouterProductos)
 app.use('/api',RouterCarrito)
+app.use('/api',RouterLogin)
 
 RouterProductos.use(express.json())
 RouterProductos.use(express.urlencoded({extended:true}))
 RouterCarrito.use(express.json())
 RouterCarrito.use(express.urlencoded({extended:true}))
+RouterLogin.use(express.json())
+RouterLogin.use(express.urlencoded({extended:true}))
 
 server.on("error",error=> console.log(`Error en servidor ${error}`));
 
@@ -131,7 +152,8 @@ RouterProductos.get('/borrar/:title', async (req,res)=>{
 RouterProductos.get('/', async (req,res)=>{
     try{
     const renderProductos = await Firebase.mostrar()
-    res.render('Index', {renderProductos});
+    let nombre = req.session.name
+    res.render('Index', {renderProductos,nombre});
 
 
     }catch(err){
@@ -191,6 +213,7 @@ io.on('connection', function(socket){
 })
 
 
+//Carrito 
 
 RouterCarrito.get('/Carrito', async (req,res)=>{
     try{
@@ -279,7 +302,7 @@ RouterCarrito.get('/Carrito/:carritoid/borrar/:idproducto', async (req,res)=>{
 })
 
 //Faker
-
+/*
 agregarfake()
 
 function agregarfake(){
@@ -296,3 +319,28 @@ function agregarfake(){
     Firebase.agregarproducto(nuevoproducto)
     }
 }
+*/
+
+// Login session
+let contador = 0;
+
+RouterLogin.get('/Login' , async (req,res)=>{
+   
+       res.render('Login')
+  
+})
+
+RouterLogin.post('/Login/guardar', async (req,res)=>{
+
+    console.log(req.body)
+    // req.session.name = req.body ??
+    res.redirect('/api')
+})
+
+RouterLogin.get('/Logout', async (req,res) =>{
+    req.session.destroy(err => {
+        if(!err){ res.redirect('/api/Login')
+    }else res.send({status:'Logout ERR', body: err})
+
+    })
+})

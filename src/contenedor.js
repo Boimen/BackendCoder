@@ -3,10 +3,10 @@ const fs = require ("fs")
 
     const productos = []
 
-    class Contenedor {
-        constructor(archivo){
-        this.archivo = archivo
-        }
+        class Contenedor {
+            constructor(archivo){
+            this.archivo = archivo
+            }
 
     
 
