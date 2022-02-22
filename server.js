@@ -155,10 +155,11 @@ RouterProductos.get('/borrar/:title', async (req,res)=>{
 //Ejs
 
 RouterProductos.get('/', async (req,res)=>{
+    const {nombre} = req.session.name
     try{
     const renderProductos = await Firebase.mostrar()
-    let nombre = req.session.name
-    res.render('Index', {renderProductos,nombre});
+    console.log("login" +nombre)
+    res.render('Index', {nombre,renderProductos});
 
 
     }catch(err){
@@ -329,16 +330,16 @@ function agregarfake(){
 // Login session
 let contador = 0;
 
-RouterLogin.get('/login' , async (req,res)=>{
+RouterLogin.get('/login' , async (req,res)=>{ 
     res.render('Login');
   
 })
 
 RouterLogin.post('/login/guardar', async (req,res)=>{
 
-    const { title } = req.body
-    console.log(title)
-    // req.session.name = req.body ??
+    const { name } = req.body
+    console.log(name)
+    req.session.name = name
     res.redirect('/api')
 })
 
