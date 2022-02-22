@@ -1,7 +1,8 @@
-const express = require ('express');
+const express = require('express');
 const app = express();
 const servidor = require ('http').Server(app)
 const io = require ('socket.io')(servidor)
+const cors = require('cors');
 const Carritos = require ('./src/Carritos.js');
 const ContenedorFirebase = require ('./src/ContenedorProdFirebase.js');
 const ContenedorMensajes = require ('./src/ContenedorMensajes')
@@ -12,7 +13,7 @@ const faker = require ('faker');
 const { mongo } = require('mongoose');
 const MongoStore = require('connect-mongo');
 const cookieParser = require('cookie-parser');
-const session = require ('express-session')
+const session = require('express-session')
 
 
 
@@ -33,7 +34,10 @@ admin.initializeApp({
 
 
 const {Router} = express;
-app.use(express.static('public'))
+app.use(cors('*'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(__dirname + '/public'));
 
 const contenedorcarritos1 = new Carritos (query2,[])
 const Firebase = new ContenedorFirebase(query);
@@ -50,13 +54,14 @@ const RouterLogin = Router()
 const RouterProductos = Router()
 const RouterCarrito = Router()
 
+
 app.use(session({
-    store: MongoStore.create({mongoUrl:  "mongodb+srv://Boimen:diehose11@cluster0.lao3a.mongodb.net/myFirstDatabase?retryWrites=true&w=majority" }),
+    store: MongoStore.create({mongoUrl: 'mongodb+srv://Boimen11:diehose11@cluster0.lao3a.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'}),
     secret : 'Boimen',
     resave : false,
     saveUnintialized : false,
     cookie: {
-        maxAge: 600000
+        maxAge: 6000000
     }
 }))
 
@@ -69,16 +74,16 @@ const server = servidor.listen(PORT,()=>{
     console.log(`Servidor ${server.address().port}`)
 });
 
+app.use('/api',RouterLogin)
 app.use('/api',RouterProductos)
 app.use('/api',RouterCarrito)
-app.use('/api',RouterLogin)
 
+RouterLogin.use(express.json());
+RouterLogin.use(express.urlencoded({ extended: true }));
 RouterProductos.use(express.json())
 RouterProductos.use(express.urlencoded({extended:true}))
 RouterCarrito.use(express.json())
 RouterCarrito.use(express.urlencoded({extended:true}))
-RouterLogin.use(express.json())
-RouterLogin.use(express.urlencoded({extended:true}))
 
 server.on("error",error=> console.log(`Error en servidor ${error}`));
 
@@ -324,23 +329,24 @@ function agregarfake(){
 // Login session
 let contador = 0;
 
-RouterLogin.get('/Login' , async (req,res)=>{
-   
-       res.render('Login')
+RouterLogin.get('/login' , async (req,res)=>{
+    res.render('Login');
   
 })
 
-RouterLogin.post('/Login/guardar', async (req,res)=>{
+RouterLogin.post('/login/guardar', async (req,res)=>{
 
-    console.log(req.body)
+    const { title } = req.body
+    console.log(title)
     // req.session.name = req.body ??
     res.redirect('/api')
 })
 
-RouterLogin.get('/Logout', async (req,res) =>{
+RouterLogin.get('/logout', async (req, res) => {
+    //const name = req.session.name;
     req.session.destroy(err => {
         if(!err){ res.redirect('/api/Login')
     }else res.send({status:'Logout ERR', body: err})
-
-    })
 })
+    //res.render('logout', { name });
+  });
