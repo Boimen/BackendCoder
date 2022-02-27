@@ -14,6 +14,8 @@ const { mongo } = require('mongoose');
 const MongoStore = require('connect-mongo');
 const cookieParser = require('cookie-parser');
 const session = require('express-session')
+const jwt = require ('./jwt')
+const ContenedorUsuario = require ('./src/ContenedorUsuarios')
 
 
 
@@ -32,6 +34,9 @@ admin.initializeApp({
     const db3 = admin.firestore()
     const query3 = db3.collection('Mensajes')
 
+    const db4 = admin.firestore()
+    const query4 = db4.collection('usuarios')
+
 
 const {Router} = express;
 app.use(cors('*'));
@@ -42,6 +47,7 @@ app.use(express.static(__dirname + '/public'));
 const contenedorcarritos1 = new Carritos (query2,[])
 const Firebase = new ContenedorFirebase(query);
 const Mensajes = new ContenedorMensajes(query3)
+const usuarios = new ContenedorUsuario(query4)
 
 app.set('views','./public');
 app.set('view engine','ejs');
@@ -61,7 +67,7 @@ app.use(session({
     resave : false,
     saveUnintialized : false,
     cookie: {
-        maxAge: 6000000
+        maxAge: 600000
     }
 }))
 
@@ -155,10 +161,11 @@ RouterProductos.get('/borrar/:title', async (req,res)=>{
 //Ejs
 
 RouterProductos.get('/', async (req,res)=>{
-    const {nombre} = req.session.name
+    const nombre = req.session.nombre;
+    console.log(nombre)
     try{
     const renderProductos = await Firebase.mostrar()
-    console.log("login" +nombre)
+
     res.render('Index', {nombre,renderProductos});
 
 
@@ -330,24 +337,86 @@ function agregarfake(){
 // Login session
 let contador = 0;
 
-RouterLogin.get('/login' , async (req,res)=>{ 
-    res.render('Login');
+RouterLogin.get('/registro' , async (req,res)=>{ 
+    res.render('Registro');
   
 })
 
-RouterLogin.post('/login/guardar', async (req,res)=>{
+RouterLogin.post('/registro/guardar', async (req,res)=>{
 
-    const { name } = req.body
-    console.log(name)
-    req.session.name = name
-    res.redirect('/api')
+    const { nombre } = req.body
+    const usuario = await usuarios.buscarporNombre(nombre)
+        
+        if (usuario) {
+        return res.status(400).json({error: "Usuario existente"})
+        }
+
+    const user = req.body
+    if(!user.contador){
+        user.contador = 0;
+    }
+    usuarios.agregarUsuario(req.body)
+    const access_token = jwt.generateAuthToken(nombre);
+    res.json({ access_token })
+    res.redirect('login')
+
+})
+
+RouterLogin.get('errorRegistro', (req,res) =>{
+    res.render('errorRegistro')
 })
 
 RouterLogin.get('/logout', async (req, res) => {
-    //const name = req.session.name;
+    const nombre = req.session.name;
     req.session.destroy(err => {
         if(!err){ res.redirect('/api/Login')
     }else res.send({status:'Logout ERR', body: err})
 })
-    //res.render('logout', { name });
+    res.render('Logout', { nombre });
   });
+
+RouterLogin.get('/login', (req,res) =>{
+    res.render('Login')
+})
+
+RouterLogin.post('/login', (req,res) =>{
+    const {nombre,constaseña} = req.body
+    const usuario = usuarios.buscarporNombre(nombre)
+
+    if(!usuario) {
+        return res.json({error: 'Usuario no encontrado'});
+        }
+    
+    const credencialesok = usuario.nombre == nombre && usuario.contraseña == contraseña
+    if(!credencialesok){
+        return res.json({error: 'credenciales invalidas'})
+    }
+    
+    usuario.contador = 0;
+    const access_token = jwt.generateAuthToken(nombre)
+    res.json({
+        nombre,
+        access_token
+    })
+    req.session.user = usuario
+    res.redirect('/api')
+
+})
+
+RouterLogin.get('/login-error' , (req,res) =>{
+    res.render('Login-error')
+})
+
+RouterLogin.get('/datos', jwt.auth , async (req,res) => {
+    const usuario = usuarios.buscarporNombre(req.user.nombre)
+        if(!usuario) {
+            return res.status(404).json({error: 'usuario no encontrado'})
+        }
+
+        usuario.contador ++
+        res.json({
+            datos:usuario,
+            contador:usuario.contador
+        })
+        
+})
