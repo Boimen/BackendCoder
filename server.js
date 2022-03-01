@@ -380,9 +380,10 @@ RouterLogin.get('/login', (req,res) =>{
 })
 
 RouterLogin.post('/login', (req,res) =>{
-    const {nombre,constaseña} = req.body
-    const usuario = usuarios.buscarporNombre(nombre)
 
+    const {nombre,contraseña} = req.body
+    const usuario = usuarios.buscarporNombre(nombre)
+    //console.log(usuario.nombre) no funciona 
     if(!usuario) {
         return res.json({error: 'Usuario no encontrado'});
         }
