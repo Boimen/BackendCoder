@@ -16,6 +16,9 @@ const cookieParser = require('cookie-parser');
 const session = require('express-session')
 const jwt = require ('./jwt')
 const ContenedorUsuario = require ('./src/ContenedorUsuarios')
+const parseArgs = require ('minimist')
+const path = require ('path')
+const {fork} = require ('child_process')
 
 
 
@@ -59,6 +62,7 @@ app.use(cookieParser())
 const RouterLogin = Router()
 const RouterProductos = Router()
 const RouterCarrito = Router()
+const RouterRandom = Router()
 
 
 app.use(session({
@@ -83,6 +87,7 @@ const server = servidor.listen(PORT,()=>{
 app.use('/api',RouterLogin)
 app.use('/api',RouterProductos)
 app.use('/api',RouterCarrito)
+app.use('/api',RouterRandom)
 
 RouterLogin.use(express.json());
 RouterLogin.use(express.urlencoded({ extended: true }));
@@ -421,3 +426,31 @@ RouterLogin.get('/datos', jwt.auth , async (req,res) => {
         })
         
 })
+
+RouterLogin.get('/info' , (req,res) =>{
+    let datos = {
+        Sistema_Operativo: process.platform,
+        Version_Node_Js:process.version,
+        Memoria_total_reservada:process.memoryUsage(),
+        Ruta_Ejecucion: process.execPath,
+        Id_Proceso:process.pid,
+        Directorio: process.cwd(),
+    }
+    res.send(datos)
+})
+
+// Random con Fork
+
+
+
+RouterRandom.get('/random/:cantidad', (req,res) => {
+    let cantidad = req.params.cantidad
+    const calculo = fork(path.resolve(__dirname, './calculos.js'),{cantidad})
+    calculo.send('start')
+    calculo.on('message' , cantidad => {
+        res.json ({cantidad})
+    })
+
+})
+
+

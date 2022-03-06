@@ -38,6 +38,7 @@ class ContenedorUsuario {
             /*email:usuario.data().email,
             contraseña:usuario.data().contraseña*/
         }))
+        return respuesta
         console.log(respuesta.data().nombre)
    
     }

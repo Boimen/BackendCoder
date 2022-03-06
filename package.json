@@ -27,6 +27,7 @@
     "connect-redis": "^6.1.1",
     "cookie-parser": "^1.4.6",
     "dayjs": "^1.10.7",
+    "dotenv": "^16.0.0",
     "ejs": "^3.1.6",
     "engine": "^1.0.0",
     "express": "^4.17.2",
@@ -36,6 +37,7 @@
     "http": "0.0.1-security",
     "jsonwebtoken": "^8.5.1",
     "knex": "^0.95.15",
+    "minimist": "^1.2.5",
     "moment": "^2.29.1",
     "momentjs": "^2.0.0",
     "mongoose": "^6.2.0",
@@ -45,12 +47,14 @@
     "passport-twitter": "^1.0.4",
     "pug": "^3.0.2",
     "random": "^3.0.6",
+    "random-int": "^3.0.0",
     "random-item": "^4.0.1",
     "randomstring": "^1.2.1",
     "redis": "^4.0.3",
     "session-file-store": "^1.5.0",
     "socket.io": "^4.4.1",
-    "sqlite3": "^5.0.2"
+    "sqlite3": "^5.0.2",
+    "yargs": "^17.3.1"
   },
   "devDependencies": {
     "faker": "^5.5.3",
