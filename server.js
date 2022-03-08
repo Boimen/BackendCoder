@@ -95,6 +95,8 @@ RouterProductos.use(express.json())
 RouterProductos.use(express.urlencoded({extended:true}))
 RouterCarrito.use(express.json())
 RouterCarrito.use(express.urlencoded({extended:true}))
+RouterRandom.use(express.json())
+RouterRandom.use(express.urlencoded({extended:true}))
 
 server.on("error",error=> console.log(`Error en servidor ${error}`));
 
@@ -444,13 +446,23 @@ RouterLogin.get('/info' , (req,res) =>{
 
 
 RouterRandom.get('/random/:cantidad', (req,res) => {
+    
     let cantidad = req.params.cantidad
-    const calculo = fork(path.resolve(__dirname, './calculos.js'),{cantidad}) // Mandar cantidad como parametro ?
+
+    if(cantidad == 0 || cantidad == null){
+    const calculo = fork(path.resolve(__dirname, './calculos.js')) // Mandar cantidad como parametro ?
     calculo.send('start')
     calculo.on('message' , cantidad => {
         res.json ({cantidad})
     })
+}else{
+    const calculo = fork(path.resolve(__dirname, './calculos.js'),{cantidad},cantidad) // Mandar cantidad como parametro ?
+    calculo.send('start')
+    calculo.on('message' , cantidad => {
+        res.json ({cantidad})
 
+    })}
+    
 })
 
 

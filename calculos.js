@@ -8,11 +8,22 @@ function random (cantidad){
 }
 
 
+function random (){
+    let numer = [];
+    let cantidad = 100000000
+    for(let i = 0;i<cantidad;i++){
+        let numerorandom = Math.floor(Math.random(1000) * 1000)
+        numer.push(numerorandom)
+    }
+    return numer
+}
+
 process.on('exit' , () => {
     console.log(`worker# ${process.pid} cerrado`)
 })
 
-process.on('message/:cantidad', msg => {
+process.on('message/', msg => {
+    
     console.log(`worker #${process.pid} iniciando su tarea`)
     const calculo = random (cantidad)
     process.send(calculo)
