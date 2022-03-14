@@ -10,7 +10,6 @@ let admin = require("firebase-admin");
 const { normalize, schema } = require("normalizr")
 let serviceAccount = require("./coderbackend-3c5d1-firebase-adminsdk-d2qrh-3781e00c29.json");
 const faker = require ('faker');
-const { mongo } = require('mongoose');
 const MongoStore = require('connect-mongo');
 const cookieParser = require('cookie-parser');
 const session = require('express-session')
@@ -19,6 +18,8 @@ const ContenedorUsuario = require ('./src/ContenedorUsuarios')
 const parseArgs = require ('minimist')
 const path = require ('path')
 const {fork} = require ('child_process')
+const cluster = require ('cluster')
+const numCpu = require ('os').cpus().length;
 
 
 
@@ -26,6 +27,42 @@ const {fork} = require ('child_process')
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
 });
+
+
+//Server 
+
+
+if(cluster.isMaster) {
+    const numCPUs = numCpu
+
+    console.log(`Procesadores en uso: ${numCPUs}`)
+    console.log(`PID MASTER ${process.pid}`)
+
+    for(let i = 0; i<numCPUs; i++) {
+        cluster.fork()
+    }
+
+    cluster.on('exit',worker=>{
+        console.log('Worker',worker.process.pid,'died',new Date().toLocaleString())
+        cluster.fork()
+    })
+}else{
+
+    const PORT = parseInt(process.argv[2]) || 8080 
+    
+    /*const server = servidor.listen(PORT,()=>{
+        console.log(`Servidor ${server.address().port}`)
+    });*/
+
+    app.get('/datoserver' ,(req,res) => {
+        res.send(`Server en PORT(${PORT})`)
+    })
+
+    app.listen(PORT, err =>{
+        if(!err) console.log(`Servidor express escuchando en el puerto ${PORT}`)
+    })
+}
+
 
 
     const db = admin.firestore()
@@ -77,12 +114,14 @@ app.use(session({
 
 
 
-const PORT = process.env.PORT || 8080
+//const PORT = parseInt(process.argv[2]) || 8080 //process.env.PORT || 8080
 
-
+/*
 const server = servidor.listen(PORT,()=>{
     console.log(`Servidor ${server.address().port}`)
 });
+*/
+
 
 app.use('/api',RouterLogin)
 app.use('/api',RouterProductos)
@@ -98,7 +137,7 @@ RouterCarrito.use(express.urlencoded({extended:true}))
 RouterRandom.use(express.json())
 RouterRandom.use(express.urlencoded({extended:true}))
 
-server.on("error",error=> console.log(`Error en servidor ${error}`));
+//server.on("error",error=> console.log(`Error en servidor ${error}`));
 
 RouterProductos.get('/productos', async (req,res)=>{
     const productos = await contenedor1.getAll()
@@ -464,5 +503,4 @@ RouterRandom.get('/random/:cantidad', (req,res) => {
     })}
     
 })
-
 
