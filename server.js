@@ -31,14 +31,14 @@ admin.initializeApp({
 
 //Server 
 
+const modoCluster = process.argv[3] == 'CLUSTER'
 
-if(cluster.isMaster) {
-    const numCPUs = numCpu
+if(modoCluster && cluster.isMaster) {
 
-    console.log(`Procesadores en uso: ${numCPUs}`)
+    console.log(`Procesadores en uso: ${numCpu}`)
     console.log(`PID MASTER ${process.pid}`)
 
-    for(let i = 0; i<numCPUs; i++) {
+    for(let i = 0; i<numCpu; i++) {
         cluster.fork()
     }
 
