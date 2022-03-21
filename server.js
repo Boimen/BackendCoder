@@ -20,6 +20,8 @@ const path = require ('path')
 const {fork} = require ('child_process')
 const cluster = require ('cluster')
 const numCpu = require ('os').cpus().length;
+const compression = require ('compression')
+const logger = require ('./logger.js')
 
 
 
@@ -59,7 +61,7 @@ if(modoCluster && cluster.isMaster) {
     })
 
     app.listen(PORT, err =>{
-        if(!err) console.log(`Servidor express escuchando en el puerto ${PORT}`)
+        if(!err) logger.info(`Servidor express escuchando en el puerto ${PORT}`)
     })
 }
 
@@ -145,6 +147,12 @@ RouterProductos.get('/productos', async (req,res)=>{
     console.log(productos)
 })
 
+app.get('*', (req,res) => {
+    const { url } = req
+    logger.warn(`Ruta ${url} inexistente`)
+    res.send(`Ruta ${url} inexistente`)
+})
+
 
 
 RouterProductos.post('/guardar', async (req,res)=>{
@@ -206,7 +214,7 @@ RouterProductos.get('/borrar/:title', async (req,res)=>{
 
 //Ejs
 
-RouterProductos.get('/', async (req,res)=>{
+RouterProductos.get('/',  async (req,res)=>{
     const nombre = req.session.nombre;
     console.log(nombre)
     try{
@@ -216,14 +224,20 @@ RouterProductos.get('/', async (req,res)=>{
 
 
     }catch(err){
+        logger.warn('Lista de productos inexistente')
         console.log(err)
     }
   
 })
 
+
 RouterProductos.post('/guardarejs', async (req,res)=>{
 
-    Firebase.agregarproducto(req.body)
+   try{
+        Firebase.agregarproducto(req.body)
+   }catch(err){
+       logger.error('Guardado de producto incorrecto')
+   }
     res.redirect('/api')
 })
 
@@ -392,7 +406,7 @@ RouterLogin.post('/registro/guardar', async (req,res)=>{
 
     const { nombre } = req.body
     const usuario = await usuarios.buscarporNombre(nombre)
-        
+    logger.info(`El nombre a buscar es ${nombre}`)
         if (usuario) {
         return res.status(400).json({error: "Usuario existente"})
         }
@@ -410,6 +424,7 @@ RouterLogin.post('/registro/guardar', async (req,res)=>{
 
 RouterLogin.get('errorRegistro', (req,res) =>{
     res.render('errorRegistro')
+    logger.error('Registro invalido')
 })
 
 RouterLogin.get('/logout', async (req, res) => {
@@ -468,7 +483,8 @@ RouterLogin.get('/datos', jwt.auth , async (req,res) => {
         
 })
 
-RouterLogin.get('/info' , (req,res) =>{
+RouterLogin.get('/info' , compression() , (req,res) =>{
+
     let datos = {
         Sistema_Operativo: process.platform,
         Version_Node_Js:process.version,
@@ -478,6 +494,7 @@ RouterLogin.get('/info' , (req,res) =>{
         Directorio: process.cwd(),
     }
     res.send(datos)
+    logger.info(datos)
 })
 
 // Random con Fork
