@@ -9,7 +9,6 @@ const ContenedorMensajes = require ('./src/ContenedorMensajes')
 let admin = require("firebase-admin");
 const { normalize, schema } = require("normalizr")
 let serviceAccount = require("./coderbackend-3c5d1-firebase-adminsdk-d2qrh-3781e00c29.json");
-const faker = require ('faker');
 const MongoStore = require('connect-mongo');
 const cookieParser = require('cookie-parser');
 const session = require('express-session')
@@ -213,6 +212,9 @@ RouterProductos.get('/borrar/:title', async (req,res)=>{
 
 
 //Ejs
+api.get('/' , (req,res) =>
+    res.send('Bienvenido')
+    )
 
 RouterProductos.get('/',  async (req,res)=>{
     const nombre = req.session.nombre;
@@ -374,25 +376,6 @@ RouterCarrito.get('/Carrito/:carritoid/borrar/:idproducto', async (req,res)=>{
 
 })
 
-//Faker
-/*
-agregarfake()
-
-function agregarfake(){
-
-    for(let i = 0 ; i<5 ; i++){
-    let faketitle = faker.lorem.words()
-    let fakeprice = faker.commerce.price()
-    let fakethumbnail = faker.image.avatar()
-    let fakestock = faker.random.number(15)
-    let fakeid = faker.random.uuid()
-
-    let nuevoproducto = {title:faketitle,price:fakeprice,thumbnail:fakethumbnail,id:fakeid,stock:fakestock}
-
-    Firebase.agregarproducto(nuevoproducto)
-    }
-}
-*/
 
 // Login session
 let contador = 0;
