@@ -49,7 +49,7 @@ if(modoCluster && cluster.isMaster) {
     })
 }else{
 
-    const PORT = parseInt(process.argv[2]) || 8080 
+    const PORT = provess.env.PORT || 8080 
     
     /*const server = servidor.listen(PORT,()=>{
         console.log(`Servidor ${server.address().port}`)
@@ -212,7 +212,7 @@ RouterProductos.get('/borrar/:title', async (req,res)=>{
 
 
 //Ejs
-api.get('/' , (req,res) =>
+app.get('/' , (req,res) =>
     res.send('Bienvenido')
     )
 

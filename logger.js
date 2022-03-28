@@ -5,7 +5,7 @@ log4js.configure({
         consola: {type: 'console'},
         archivoError: { type: 'file' , filename: 'error.log'},
         archivoWarn: {type: 'file' , filename: 'warn.log'},
-        loggerArchivoError: {type : 'logLevelfilter' , appender: 'archivoError' , level: 'error'},
+        loggerArchivoError: {type : 'logLevelFilter' , appender: 'archivoError' , level: 'error'},
         loggerArchivoWarn: {type: 'logLevelFilter' , appender: 'archivoWarn' , level: 'warn'},
         loggerDebug: {type: 'logLevelFilter' , appender: 'consola' , level: 'debug'}
     },
