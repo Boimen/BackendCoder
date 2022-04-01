@@ -408,8 +408,9 @@ RouterLogin.post('/login', async (req,res) =>{
     console.log(usuario)
 
     
-    const credencialesok = usuario.nombre == nombre && usuario.contraseña == contraseña
-    if(!credencialesok){
+    let credencialesok = usuario.find(u => u.nombre == nombre && u.contraseña==contraseña)
+    console.log(credencialesok)
+    /*if(credencialesok.length === 0){
         return res.json({error: 'credenciales invalidas'})
     }
     
@@ -421,7 +422,7 @@ RouterLogin.post('/login', async (req,res) =>{
     })
     req.session.user = usuario
     res.redirect('/api')
-
+*/
 })
 
 RouterLogin.get('/login-error' , (req,res) =>{
