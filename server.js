@@ -7,14 +7,12 @@ const Carritos = require ('./src/Carritos.js');
 const ContenedorFirebase = require ('./src/ContenedorProdFirebase.js');
 const ContenedorMensajes = require ('./src/ContenedorMensajes')
 let admin = require("firebase-admin");
-const { normalize, schema } = require("normalizr")
 let serviceAccount = require("./coderbackend-3c5d1-firebase-adminsdk-d2qrh-3781e00c29.json");
 const MongoStore = require('connect-mongo');
 const cookieParser = require('cookie-parser');
 const session = require('express-session')
 const jwt = require ('./jwt')
 const ContenedorUsuario = require ('./src/ContenedorUsuarios')
-const parseArgs = require ('minimist')
 const path = require ('path')
 const {fork} = require ('child_process')
 const cluster = require ('cluster')
@@ -244,28 +242,6 @@ RouterProductos.post('/guardarejs', async (req,res)=>{
 
 //Io
 
-RouterProductos.get('/Normalizar', async (req,res)=>{
-    try{
-    let mensajes = await Mensajes.mostrar()
-    let participantes = await Mensajes.traerautores()
-    let querySnapshot = await query3.get()
-    let cantidad = querySnapshot.size
-
-    const logmensajes = new schema.Entity('mensajes',{
-        id: 1,
-        Participantes: participantes,
-        Cantidad_Mensajes: cantidad,
-        mensajes: mensajes
-    })
-
-    res.send({logmensajes});
-
-
-    }catch(err){
-        console.log(err)
-    }
-  
-})
 
 
 let messages = []
@@ -389,14 +365,12 @@ RouterLogin.post('/registro/guardar', async (req,res)=>{
 
     const {nombre} = req.body
     const usuarioencontrado = await usuarios.buscarporNombre(nombre)
-    console.log(nombre)
-    console.log(usuarioencontrado)
 
-    /*logger.info(`El nombre a buscar es ${nombre}`)
-        if (usuario.length === 0) {
-        return res.status(400).json(usuario)
+    logger.info(`El nombre a buscar es ${nombre}`)
+
+        if (usuarioencontrado.length != 0) {
+        return res.status(400).json(`El usuario: ${nombre} ya existe`)
         }else{
-
     const user = req.body
     if(!user.contador){
         user.contador = 0;
@@ -406,7 +380,7 @@ RouterLogin.post('/registro/guardar', async (req,res)=>{
     res.json({ access_token })
 }
     res.redirect('login')
-*/
+
 })
 
 RouterLogin.get('errorRegistro', (req,res) =>{
@@ -427,14 +401,12 @@ RouterLogin.get('/login', (req,res) =>{
     res.render('Login')
 })
 
-RouterLogin.post('/login', (req,res) =>{
+RouterLogin.post('/login', async (req,res) =>{
 
     const {nombre,contraseña} = req.body
-    const usuario = usuarios.buscarporNombre(nombre)
-    //console.log(usuario.nombre) no funciona 
-    if(!usuario) {
-        return res.json({error: 'Usuario no encontrado'});
-        }
+    const usuario = await usuarios.buscarporNombre(nombre)
+    console.log(usuario)
+
     
     const credencialesok = usuario.nombre == nombre && usuario.contraseña == contraseña
     if(!credencialesok){

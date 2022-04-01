@@ -37,7 +37,7 @@ class ContenedorProd {
             console.log('Producto inexistente')
             return;
         }else{
-        const respuesta = doc.map(producto => ({
+        let respuesta = doc.map(producto => ({
             title:producto.data().title,
             price:producto.data().price
         }))
