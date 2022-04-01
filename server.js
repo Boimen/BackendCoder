@@ -49,7 +49,7 @@ if(modoCluster && cluster.isMaster) {
     })
 }else{
 
-    const PORT = provess.env.PORT || 8080 
+    const PORT = process.env.PORT || 8080 
     
     /*const server = servidor.listen(PORT,()=>{
         console.log(`Servidor ${server.address().port}`)
@@ -141,7 +141,7 @@ RouterRandom.use(express.urlencoded({extended:true}))
 //server.on("error",error=> console.log(`Error en servidor ${error}`));
 
 RouterProductos.get('/productos', async (req,res)=>{
-    const productos = await contenedor1.getAll()
+    const productos = await Firebase.mostrar()
     res.send(productos);
     console.log(productos)
 })
@@ -160,15 +160,11 @@ RouterProductos.post('/guardar', async (req,res)=>{
     res.redirect('/api')
 })
 
-RouterProductos.get('/productos/:id',async (req,res)=>{
-    let id = req.params.id
-    let busqueda = await contenedor1.getById(id)
-
-    if (busqueda){
+RouterProductos.get('/productos/:title',async (req,res)=>{
+    const title = req.params.title
+    const busqueda = await Firebase.buscarporNombre(title)
     res.send(busqueda)
-    }else{
-        res.send('Producto inexistente')
-    }
+
 })
 
 RouterProductos.put('/modificar/:id', async (req,res)=>{
@@ -384,15 +380,22 @@ RouterLogin.get('/registro' , async (req,res)=>{
     res.render('Registro');
   
 })
+RouterLogin.get('/usuarios' , async (req,res)=>{ 
+    res.send(usuarios.mostrar())
+  
+})
 
 RouterLogin.post('/registro/guardar', async (req,res)=>{
 
-    const { nombre } = req.body
-    const usuario = await usuarios.buscarporNombre(nombre)
-    logger.info(`El nombre a buscar es ${nombre}`)
-        if (usuario) {
-        return res.status(400).json({error: "Usuario existente"})
-        }
+    const {nombre} = req.body
+    const usuarioencontrado = await usuarios.buscarporNombre(nombre)
+    console.log(nombre)
+    console.log(usuarioencontrado)
+
+    /*logger.info(`El nombre a buscar es ${nombre}`)
+        if (usuario.length === 0) {
+        return res.status(400).json(usuario)
+        }else{
 
     const user = req.body
     if(!user.contador){
@@ -401,14 +404,15 @@ RouterLogin.post('/registro/guardar', async (req,res)=>{
     usuarios.agregarUsuario(req.body)
     const access_token = jwt.generateAuthToken(nombre);
     res.json({ access_token })
+}
     res.redirect('login')
-
+*/
 })
 
 RouterLogin.get('errorRegistro', (req,res) =>{
     res.render('errorRegistro')
     logger.error('Registro invalido')
-})
+})  
 
 RouterLogin.get('/logout', async (req, res) => {
     const nombre = req.session.name;

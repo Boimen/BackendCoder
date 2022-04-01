@@ -30,21 +30,24 @@ class ContenedorUsuario {
 
     async buscarporNombre(nombre){
 
+      try{ 
         const querySnapshot = await this.query.where('nombre','==',nombre).get()
         let doc = querySnapshot.docs
+        if(doc.empty){
+            console.log('Usuario inexistente')
+            return;
+        }else{
 
         const respuesta = doc.map(usuario => ({
-            nombre:usuario.data().nombre,
-            /*email:usuario.data().email,
-            contraseña:usuario.data().contraseña*/
+            nombre:usuario.data().nombre
         }))
-        return respuesta
-        console.log(respuesta.data().nombre)
+        return respuesta 
+        }
+         }catch(err){
+            console.log(err)
+        }
    
     }
-
-  
-
 }
 
 module.exports = ContenedorUsuario;

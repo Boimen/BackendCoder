@@ -29,15 +29,24 @@ class ContenedorProd {
         return (respuesta)
     }
     async buscarporNombre(title){
+
+    try{
         const querySnapshot = await this.query.where('title','==',title).get()
         let doc = querySnapshot.docs
-
+        if(doc.empty){
+            console.log('Producto inexistente')
+            return;
+        }else{
         const respuesta = doc.map(producto => ({
             title:producto.data().title,
             price:producto.data().price
         }))
-        console.log(respuesta)
+        return respuesta
+    }}catch(err){
+        console.log(err)
     }
+}
+
     async eliminarporNombre(title){
         const querySnapshot = await this.query.where('title','==',title).get()
         try{
