@@ -211,7 +211,7 @@ app.get('/' , (req,res) =>
     )
 
 RouterProductos.get('/',  async (req,res)=>{
-    const nombre = req.session.nombre;
+    const nombre = req.session.user;
     console.log(nombre)
     try{
     const renderProductos = await Firebase.mostrar()
@@ -389,7 +389,7 @@ RouterLogin.get('errorRegistro', (req,res) =>{
 })  
 
 RouterLogin.get('/logout', async (req, res) => {
-    const nombre = req.session.name;
+    const nombre = req.session.nombre;
     req.session.destroy(err => {
         if(!err){ res.redirect('/api/Login')
     }else res.send({status:'Logout ERR', body: err})
@@ -403,26 +403,21 @@ RouterLogin.get('/login', (req,res) =>{
 
 RouterLogin.post('/login', async (req,res) =>{
 
-    const {nombre,contraseña} = req.body
-    const usuario = await usuarios.buscarporNombre(nombre)
+    let {nombre,contraseña} = req.body
+    let usuario = await usuarios.buscarporNombre(nombre)
     console.log(usuario)
 
     
-    let credencialesok = usuario.find(u => u.nombre == nombre && u.contraseña==contraseña)
-    console.log(credencialesok)
-    /*if(credencialesok.length === 0){
+    let credencialesok = usuario.find(u => u.nombre == nombre && u.pass==contraseña)
+    if(credencialesok.length === 0){
         return res.json({error: 'credenciales invalidas'})
-    }
-    
+    }else{
     usuario.contador = 0;
     const access_token = jwt.generateAuthToken(nombre)
-    res.json({
-        nombre,
-        access_token
-    })
-    req.session.user = usuario
+    req.session.user = nombre
     res.redirect('/api')
-*/
+}
+
 })
 
 RouterLogin.get('/login-error' , (req,res) =>{
