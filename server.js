@@ -19,6 +19,7 @@ const cluster = require ('cluster')
 const numCpu = require ('os').cpus().length;
 const compression = require ('compression')
 const logger = require ('./logger.js')
+const {encrypt,compare} = require('./helpers/encriptacion')
 
 
 
@@ -47,7 +48,7 @@ if(modoCluster && cluster.isMaster) {
     })
 }else{
 
-    const PORT = process.env.PORT || 8080 
+    const PORT = parseInt(process.argv[2]) || 8080 
     
     /*const server = servidor.listen(PORT,()=>{
         console.log(`Servidor ${server.address().port}`)
@@ -211,12 +212,12 @@ app.get('/' , (req,res) =>
     )
 
 RouterProductos.get('/',  async (req,res)=>{
-    const nombre = req.session.user;
-    console.log(nombre)
+    const usuariologeado = req.session.user[0].nombre;
+    console.log(usuariologeado)
     try{
     const renderProductos = await Firebase.mostrar()
 
-    res.render('Index', {nombre,renderProductos});
+    res.render('Index', {usuariologeado,renderProductos});
 
 
     }catch(err){
@@ -363,7 +364,7 @@ RouterLogin.get('/usuarios' , async (req,res)=>{
 
 RouterLogin.post('/registro/guardar', async (req,res)=>{
 
-    const {nombre} = req.body
+    const {nombre,correo,contraseña} = req.body
     const usuarioencontrado = await usuarios.buscarporNombre(nombre)
 
     logger.info(`El nombre a buscar es ${nombre}`)
@@ -375,7 +376,12 @@ RouterLogin.post('/registro/guardar', async (req,res)=>{
     if(!user.contador){
         user.contador = 0;
     }
-    usuarios.agregarUsuario(req.body)
+    const pass = await encrypt(contraseña)
+    const nuevousuario = {
+        nombre,
+        correo:correo,
+        contraseña:pass}
+    usuarios.agregarUsuario(nuevousuario)
     const access_token = jwt.generateAuthToken(nombre);
     res.json({ access_token })
 }
@@ -407,14 +413,14 @@ RouterLogin.post('/login', async (req,res) =>{
     let usuario = await usuarios.buscarporNombre(nombre)
     console.log(usuario)
 
-    
-    let credencialesok = usuario.find(u => u.nombre == nombre && u.pass==contraseña)
-    if(credencialesok.length === 0){
-        return res.json({error: 'credenciales invalidas'})
+    let credencialesok = null
+    credencialesok = usuario.find(u => u.nombre == nombre && compare(contraseña, u.contraseña))
+    if(credencialesok == null){
+            res.render('Login-error')
     }else{
     usuario.contador = 0;
     const access_token = jwt.generateAuthToken(nombre)
-    req.session.user = nombre
+    req.session.user = usuario
     res.redirect('/api')
 }
 
