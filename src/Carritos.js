@@ -1,9 +1,10 @@
 const server = require ('../server.js')
 let admin = require("firebase-admin");
 
+
 class Carrito {
-    constructor(id,date,productos){
-        this.id = id
+    constructor(usuario,date,productos){
+        this.usuario = usuario
         this.date = date;
         this.productos = productos
     }
@@ -16,7 +17,7 @@ class Carritos {
     }
 
 
-
+    
     async getAll(){
                 const querySnapshot = await this.query.get()
                 let docs = querySnapshot.docs;
@@ -28,7 +29,7 @@ class Carritos {
                 }))
                 return (respuesta)
             }
-
+            
 
     async getLastFromList() {
                 this.query.limitToLast(1).once(id)
@@ -40,14 +41,14 @@ class Carritos {
               }
 
 
-    async crearCarrito () {
-   
-                    let snapshot = await getLastFromList()
-                    let id = snapshot +1 ;
-                    let nuevocarrito = new Carrito(nuevoid,new Date(),[])
-                    let doc = this.query.doc(`${id}`);
+    async crearCarrito (usuario) {
+      
+                    /*let snapshot = await getLastFromList.get()
+                    let id = snapshot +1 ;*/
+                    let nuevocarrito = JSON.parse(JSON.stringify(new Carrito(usuario,new Date(),[])))
+                    let doc = this.query.doc();
                     doc.create(nuevocarrito)
-                    return console.log('Insertado')
+                    return nuevocarrito
 
                         /*let objetosencarrito = file.length
                             nuevocarrito.id = objetosencarrito + 1;
@@ -57,8 +58,8 @@ class Carritos {
                                 const datos = JSON.stringify(file)
                                 fs.writeFileSync(this.archivo,JSON.stringify(file,null,2),'utf-8')
                                 return file;
-                        */
-
+               */
+       
   
 }
     async deleteById (id){

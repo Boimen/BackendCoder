@@ -20,7 +20,8 @@ const numCpu = require ('os').cpus().length;
 const compression = require ('compression')
 const logger = require ('./logger.js')
 const {encrypt,compare} = require('./helpers/encriptacion')
-
+const {createTransport} = require ('nodemailer')
+const twilio = require ('twilio')
 
 
 
@@ -265,8 +266,9 @@ io.on('connection', function(socket){
 
 RouterCarrito.get('/Carrito', async (req,res)=>{
     try{
-        const renderCarrito = await contenedorcarritos1.crearCarrito()
-        res.render('Carrito', {renderCarrito});
+        let renderCarrito = await contenedorcarritos1.crearCarrito(req.session.user[0].nombre)
+        /*res.render('Carrito', {renderCarrito});*/
+        console.log(await renderCarrito)
         }catch(err){
             console.log(err)
         }
@@ -377,15 +379,48 @@ RouterLogin.post('/registro/guardar', async (req,res)=>{
         user.contador = 0;
     }
     const pass = await encrypt(contraseña)
-    const nuevousuario = {
+    let nuevousuario = {
         nombre,
         correo:correo,
         contraseña:pass}
     usuarios.agregarUsuario(nuevousuario)
     const access_token = jwt.generateAuthToken(nombre);
-    res.json({ access_token })
+
+    const transporter = createTransport ({
+        host:'smtp.ethereal.email',
+        port:587,
+        auth:{
+            user: 'chester.ritchie80@ethereal.email',
+            pass: 'n1vVFfCMhumespgcfS'
+        }
+    })
+    const mailOptions = {
+        from: 'Servidor Node.js',
+        to: 'chester.ritchie80@ethereal.email',
+        subject: 'Mail de prueba desde Node.js',
+        text:`Nombre de usuario : ${nombre}, mail: ${correo}, contraseña: ${contraseña}`
+    }
+    try{
+        const info = await transporter.sendMail(mailOptions)
+        console.log (info)
+    }catch(err){
+        console.log(err)
+    }
+
+    const acountSid = 'AC5c1922794a2496c38738ac5effb1740d'
+    const authToken = 'eadbc969d0ca433cf4ad35736539f56a'
+    const client = twilio (acountSid,authToken)
+    try{
+        const message = await client.messages.create({
+            body: 'Gracias por registrarse',
+            from: 'whatsapp:+14155238886',
+            to: 'whatsapp:+541131610864'
+        })
+    }catch(err){
+        console.log(err)
+    }
 }
-    res.redirect('login')
+    res.redirect('/api/login')
 
 })
 
@@ -415,14 +450,14 @@ RouterLogin.post('/login', async (req,res) =>{
 
     let credencialesok = null
     credencialesok = usuario.find(u => u.nombre == nombre && compare(contraseña, u.contraseña))
-    if(credencialesok == null){
+    if(!credencialesok){
             res.render('Login-error')
-    }else{
+    }
     usuario.contador = 0;
     const access_token = jwt.generateAuthToken(nombre)
     req.session.user = usuario
     res.redirect('/api')
-}
+
 
 })
 
