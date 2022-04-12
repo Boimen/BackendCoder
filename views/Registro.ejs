@@ -10,13 +10,18 @@
 </head>
 <body>
   <div class="container mt-3 p-5">
+    <h1>Registro</h1><br><br>
     <div class="jumbotron">
       
-          <form action="/api/login" method="POST">
+          <form action="/api/registro/guardar" method="POST">
             <div class="form-group">
               <label for="nombre"><b>Nombre</b></label>
               <input name="nombre" class="form-control" type="text" placeholder="nombre"/>
             </div>
+            <div class="form-group">
+              <label for="correo"><b>Correo Electronico</b></label>
+              <input name="correo" class="form-control" type="text" placeholder="correo"/>
+            </div> 
             <div class="form-group">
               <label for="contraseña"><b>Contraseña</b></label>
               <input name="contraseña" class="form-control" type="password" placeholder="contraseña"/>
@@ -24,10 +29,12 @@
             </div>
             </form>
             <div class="form-group">
-            <form action="/api/registro" method="GET">
-            <button class="btn btn-success mt-3 mb-5">Registrarse</button>
+            <form action="/api/login" method="GET">
+            <button class="btn btn-success mt-3 mb-5">Login</button>
             </form>
-            </div>
+              </div>
+        
+          </form>
       </div>
     </div>
 

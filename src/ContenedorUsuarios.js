@@ -40,7 +40,7 @@ class ContenedorUsuario {
 
         const respuesta = doc.map(usuario => ({
             nombre:usuario.data().nombre,
-            email:usuario.data().email,
+            email:usuario.data().correo,
             pass:usuario.data().contraseña
         }))
         return respuesta 
