@@ -41,24 +41,14 @@ class Carritos {
               }
 
 
-    async crearCarrito (usuario) {
+    async crearCarrito (usuario,productos) {
       
-                    /*let snapshot = await getLastFromList.get()
-                    let id = snapshot +1 ;*/
-                    let nuevocarrito = JSON.parse(JSON.stringify(new Carrito(usuario,new Date(),[])))
+                    let nuevocarrito = JSON.parse(JSON.stringify(new Carrito(usuario,new Date(),productos)))
                     let doc = this.query.doc();
                     doc.create(nuevocarrito)
                     return nuevocarrito
 
-                        /*let objetosencarrito = file.length
-                            nuevocarrito.id = objetosencarrito + 1;
-                            nuevocarrito.date = momento;
-                            nuevocarrito.productos = []
-                                file.push(nuevocarrito)
-                                const datos = JSON.stringify(file)
-                                fs.writeFileSync(this.archivo,JSON.stringify(file,null,2),'utf-8')
-                                return file;
-               */
+      
        
   
 }

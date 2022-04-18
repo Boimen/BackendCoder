@@ -3,4 +3,12 @@
     <form action="/api/logout" method="GET">
     <button class="btn btn-danger mt-3 mb-5">Cerrar sesion</button>
     </form>
+    <% if(carrito.length>0){ %>
+        <form action="/api/carrito" method="GET">
+        <button class="btn btn-secondary mt-3 mb-5">Ver Carrito</button>
+        </form>
+        <form action="/api/carrito/confirmacion" method="GET">
+            <button class="btn btn-secondary mt-3 mb-5">Confirmar Carrito</button>
+        </form>
+        <% } %>
 </div>

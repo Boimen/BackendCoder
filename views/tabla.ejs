@@ -22,8 +22,8 @@
                 <button class="btn btn-danger mt-3 mb-5">Eliminar</button>
             </td>
             <td></form>
-                <form action= "api/modificar/producto/<%=producto.id %>" method="GET">
-                    <button class="btn btn-secondary mt-3 mb-5">Modificar</button>
+                <form action= "api/carrito/agregarproducto/<%=producto.title%>" method="POST">
+                    <button class="btn btn-secondary mt-3 mb-5">Agregar al carrito</button>
                 </form>
             </td>
         </tr>

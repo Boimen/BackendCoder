@@ -1,7 +1,7 @@
 const express = require ('express')
 const Router = require ('express')
-const logger = require ('../logger.js')
-const jwt = require ('../jwt')
+const logger = require ('../helpers/logger')
+const jwt = require ('../helpers/jwt')
 const compression = require ('compression');
 const {registro,guardarRegistro,getlogin,login,mostrar,errorRegistro,logout,datos} = require('../Controllers/Login.js');
 

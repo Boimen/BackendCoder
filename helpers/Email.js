@@ -6,8 +6,8 @@ const {createTransport} = require ('nodemailer')
     host:'smtp.ethereal.email',
     port:587,
     auth:{
-        user: 'dejon.kessler41@ethereal.email',
-        pass: 'yjJY64y157ebZvBzvV'
+        user: 'liliane.cruickshank6@ethereal.email',
+        pass: 'KT7VRt8YsmVkfz8UUM'
     }
 })
 
@@ -15,7 +15,7 @@ async function enviarmail (nombre,correo,contraseña){
 
 const mailOptions = {
     from: 'Servidor Node.js',
-    to: 'dejon.kessler41@ethereal.email',
+    to: 'liliane.cruickshank6@ethereal.email',
     subject: 'Confirmacion registro',
     text:`Nombre de usuario : ${nombre}, mail: ${correo}, contraseña: ${contraseña}`
 }
@@ -28,4 +28,23 @@ try{
 }
 }
 
-module.exports = enviarmail
+async function mailCarrito (nombre,fecha,carrito){
+
+    const mailOptions = {
+        from: 'Servidor Node.js',
+        to: 'liliane.cruickshank6@ethereal.email',
+        subject: 'Confirmacion carrito',
+        text:`Nombre de usuario : ${nombre}, fecha: ${fecha}, Productos: ${carrito}`
+    }
+    
+    try{
+        const info = await transporter.sendMail(mailOptions)
+        console.log (info)
+        return
+    }catch(err){
+        console.log(err)
+    }
+}
+
+
+module.exports = {mailCarrito,enviarmail}

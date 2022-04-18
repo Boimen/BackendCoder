@@ -3,10 +3,8 @@ const app = express();
 const servidor = require ('http').Server(app)
 const io = require ('socket.io')(servidor)
 const cors = require('cors');
-const Carritos = require ('./src/Carritos.js');
 const ContenedorMensajes = require ('./src/ContenedorMensajes')
 let admin = require("firebase-admin");
-let serviceAccount = require("./coderbackend-3c5d1-firebase-adminsdk-d2qrh-3781e00c29.json");
 const MongoStore = require('connect-mongo');
 const cookieParser = require('cookie-parser');
 const session = require('express-session')
@@ -14,10 +12,10 @@ const path = require ('path')
 const {fork} = require ('child_process')
 const cluster = require ('cluster')
 const numCpu = require ('os').cpus().length;
-const logger = require ('./logger.js')
+const logger = require ('./helpers/logger')
 const RouterLogin = require ('./Rutas/RutaLogin')
 const RouterProductos = require ('./Rutas/RutaProductos')
-
+const RouterCarrito = require ('./Rutas/RutaCarrito')
 
 
 
@@ -41,10 +39,7 @@ if(modoCluster && cluster.isMaster) {
 }else{
 
     const PORT = parseInt(process.argv[2]) || 8080 
-    
-    /*const server = servidor.listen(PORT,()=>{
-        console.log(`Servidor ${server.address().port}`)
-    });*/
+
 
     app.get('/datoserver' ,(req,res) => {
         res.send(`Server en PORT(${PORT})`)
@@ -55,8 +50,6 @@ if(modoCluster && cluster.isMaster) {
     })
 }
 
-    const db2 = admin.firestore()
-    const query2 = db2.collection('Carritos')
 
     const db3 = admin.firestore()
     const query3 = db3.collection('Mensajes')
@@ -69,7 +62,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '/public'));
 
-const contenedorcarritos1 = new Carritos (query2,[])
 const Mensajes = new ContenedorMensajes(query3)
 
 app.set('views',path.join(__dirname, './views'));
@@ -77,7 +69,6 @@ app.set('view engine','ejs');
 app.use(cookieParser())
 
 
-const RouterCarrito = Router()
 const RouterRandom = Router()
 
 
@@ -97,9 +88,6 @@ app.use("/api",RouterLogin)
 app.use('/api',RouterProductos)
 app.use('/api',RouterCarrito)
 
-
-RouterCarrito.use(express.json())
-RouterCarrito.use(express.urlencoded({extended:true}))
 RouterRandom.use(express.json())
 RouterRandom.use(express.urlencoded({extended:true}))
 
@@ -137,92 +125,5 @@ io.on('connection', function(socket){
 })
 
 
-//Carrito 
 
-RouterCarrito.get('/Carrito', async (req,res)=>{
-    try{
-        let renderCarrito = await contenedorcarritos1.crearCarrito(req.session.user[0].nombre)
-        /*res.render('Carrito', {renderCarrito});*/
-        console.log(await renderCarrito)
-        }catch(err){
-            console.log(err)
-        }
-    
-})
-
-RouterCarrito.get('/Carrito/borrar/:id', async (req,res)=>{
-    const { id } = req.params
-    try {
-        let borrado = await contenedorcarritos1.deleteById(id)
-        if (borrado){
-            res.send(borrado)
-        }else{
-            res.send('Carrito Inexistente')
-        }
-        
-    } catch (err) {
-        console.log(err)
-    }
- 
-})
-
-RouterCarrito.get('/Carrito/:carritoid/:idproducto', async (req,res)=>{
-
-    const carritoid  = req.params.carritoid
-    const productoid  = req.params.idproducto
-
- 
-    try {
-
-        let busqueda = await contenedor1.getById(productoid)
-        if(busqueda){
-        let agregadocarrito = await contenedorcarritos1.addById(carritoid,busqueda)
-            res.send(agregadocarrito)
-        }else{
-        res.send('Producto inexistente')
-        }
-        
-    } catch (err) {
-        res.send('Producto inexistente')
-    }
-
-})
-
-RouterCarrito.get('/Carrito/:carritoid/', async (req,res)=>{
-
-    const carritoid  = req.params.carritoid
-
-    try {
-
-        let renderCarrito = await contenedorcarritos1.getById(carritoid)
-
-        if (renderCarrito){
-            res.render('Carritoid', {renderCarrito});
-        }else{
-            res.send('Carrito inexistente')
-        }
-        
-    } catch (err) {
-        console.log(err)
-    }
-})
-
-RouterCarrito.get('/Carrito/:carritoid/borrar/:idproducto', async (req,res)=>{
-
-    const carritoid  = req.params.carritoid
-    const productoid  = req.params.idproducto
-
- 
-    try {
-
-        let borradodecarrito = await contenedorcarritos1.deleteproductById(carritoid,productoid)
-        res.redirect('back')
-     
-        
-        } catch (err) {
-
-            res.send('Invalido')
-        }
-
-})
 

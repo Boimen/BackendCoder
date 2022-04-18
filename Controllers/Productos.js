@@ -1,5 +1,5 @@
 const admin = require("firebase-admin");
-const logger = require ('../logger.js')
+const logger = require ('../helpers/logger')
 const ContenedorFirebase = require ('../src/ContenedorProdFirebase.js');
 
 
@@ -13,11 +13,12 @@ async function serverpage (req,res) {
         res.redirect('/api/login')
     }
     const usuariologeado = req.session.user[0].nombre;
+    const carrito = req.session.carrito
     console.log(usuariologeado)
     try{
     const renderProductos = await Firebase.mostrar()
 
-    res.render('Index', {usuariologeado,renderProductos});
+    res.render('Index', {usuariologeado,renderProductos,carrito});
 
 
     }catch(err){
