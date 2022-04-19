@@ -1,14 +1,6 @@
 const server = require ('../server.js')
-let admin = require("firebase-admin");
+const Carrito = require ('../DTOs/DTOcarrito')
 
-
-class Carrito {
-    constructor(usuario,date,productos){
-        this.usuario = usuario
-        this.date = date;
-        this.productos = productos
-    }
-}
 
 class Carritos {
     constructor(query,Carrito){

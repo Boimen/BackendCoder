@@ -12,11 +12,11 @@ const query2 = db2.collection('Carritos')
 const contenedorcarritos1 = new Carritos (query2,[])
 const contFirebase = new ContenedorProdFirebase (query)
 
-async function crearCarrito (req,res) {
+async function listaCarritos (req,res) {
     try{
-        let renderCarrito = await contenedorcarritos1.crearCarrito(req.session.user[0].nombre)
+        let renderCarrito = await contenedorcarritos1.getAll()
         /*res.render('Carrito', {renderCarrito});*/
-        console.log(await renderCarrito)
+        res.send(await renderCarrito)
         }catch(err){
             console.log(err)
         }
@@ -60,4 +60,4 @@ async function confirmarCarrito (req,res) {
     }
 }
 
-module.exports = {crearCarrito,agregarProducto,mostrarcarrito,confirmarCarrito}
+module.exports = {listaCarritos,agregarProducto,mostrarcarrito,confirmarCarrito}
