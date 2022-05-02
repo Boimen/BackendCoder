@@ -9,7 +9,6 @@ const MongoStore = require('connect-mongo');
 const cookieParser = require('cookie-parser');
 const session = require('express-session')
 const path = require ('path')
-const {fork} = require ('child_process')
 const cluster = require ('cluster')
 const numCpu = require ('os').cpus().length;
 const logger = require ('./helpers/logger')
@@ -123,7 +122,3 @@ io.on('connection', function(socket){
                 
     })
 })
-
-
-
-
