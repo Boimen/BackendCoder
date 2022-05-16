@@ -1,6 +1,6 @@
 const express = require ('express')
 const Router = require ('express')
-const {serverpage,mostrarproductos,buscarprodNombre,borrarproducto,modificarproducto,guardarproducto} = require ('../Controllers/Productos')
+const {serverpage,mostrarproductos,buscarprodNombre,borrarproducto,modificarproducto,guardarproducto} = require ('../controllers/producto')
 const {graphqlHTTP} = require ('express-graphql')
 const {buildSchema} = require ('graphql')
 const crypto = require ('crypto')

@@ -1,6 +1,6 @@
 const admin = require("firebase-admin");
 const logger = require ('../helpers/logger')
-const ContenedorFirebase = require ('../src/ContenedorProdFirebase.js');
+const ContenedorFirebase = require ('../data/ContenedorProdFirebase.js');
 
 
 const db = admin.firestore()

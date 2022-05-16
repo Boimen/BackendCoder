@@ -4,18 +4,6 @@ class ContenedorMensajes {
     this.query = query
     }
 
-    /*async getLastFromList() {
-        try{
-        this.query.limitToLast(1)
-            .then(function(snapshot) {
-            snapshot.forEach(function(childSnapshot) {
-                return(childSnapshot.val());     
-            })
-            })
-    }catch(err){
-        console.log(err)
-    }*/
-
 
     async agregarNuevo (mensaje){
         let doc = this.query.doc()

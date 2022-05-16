@@ -1,6 +1,6 @@
 const admin = require("firebase-admin");
-const Carritos = require ('../src/Carritos')
-const ContenedorProdFirebase = require ('../src/ContenedorProdFirebase')
+const Carritos = require ('../data/Carritos')
+const ContenedorProdFirebase = require ('../data/ContenedorProdFirebase')
 const {mailCarrito} = require ('../helpers/Email')
 
 const db = admin.firestore()

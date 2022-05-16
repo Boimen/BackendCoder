@@ -1,7 +1,7 @@
 const admin = require("firebase-admin");
 const logger = require ('../helpers/logger')
-const ContenedorUsuario = require ('../src/ContenedorUsuarios')
-let serviceAccount = require("../coderbackend-3c5d1-firebase-adminsdk-d2qrh-3781e00c29.json");
+const ContenedorUsuario = require ('../data/ContenedorUsuarios')
+let serviceAccount = require("../../coderbackend-3c5d1-firebase-adminsdk-d2qrh-3781e00c29.json");
 const {encrypt,compare} = require ('../helpers/encriptacion')
 const jwt = require ('../helpers/jwt')
 const compression = require ('compression')

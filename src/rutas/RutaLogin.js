@@ -12,9 +12,6 @@ const RouterLogin = new Router ()
 RouterLogin.use(express.json());
 RouterLogin.use(express.urlencoded({ extended: true }));
 
-let contador = 0;
-
-
 RouterLogin.get('/registro' , registro)
 
 RouterLogin.get('/usuarios' , mostrar)
