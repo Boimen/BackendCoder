@@ -1,12 +1,8 @@
-const admin = require("firebase-admin");
 const logger = require ('../helpers/logger')
-const ContenedorFirebase = require ('../data/ContenedorProdFirebase.js');
+const ContenedorMongo = require ('../datamongo/ContProductos')
 
+const contenedorNuevo = new ContenedorMongo()
 
-const db = admin.firestore()
-const query = db.collection('productos')
-
-const Firebase = new ContenedorFirebase(query);
 
 async function serverpage (req,res) {
     if(!req.session.user){
@@ -16,7 +12,7 @@ async function serverpage (req,res) {
     const carrito = req.session.carrito
     console.log(usuariologeado)
     try{
-    const renderProductos = await Firebase.mostrar()
+    const renderProductos = await contenedorNuevo.mostrarProductos()
 
     res.render('Index', {usuariologeado,renderProductos,carrito});
 
@@ -29,16 +25,15 @@ async function serverpage (req,res) {
 
 async function mostrarproductos (req,res) {
 
-    const productos = await Firebase.mostrar()
+    const productos = await contenedorNuevo.mostrarproductos()
     res.send(productos);
-    console.log(productos)
 
 }
 
 async function borrarproducto (req,res) {
     const { title } = req.params
     try {
-        let borrado = await Firebase.eliminarporNombre(title)
+        let borrado = await contenedorNuevo.borrarproducto(title)
             res.redirect('/api')
         if (borrado){
             res.redirect('/api')
@@ -53,7 +48,12 @@ async function borrarproducto (req,res) {
 
 async function modificarproducto (req,res) {
     let {id} = req.params
-    res.render('modificarproducto',{id})
+    let title = req.params.title
+    let price = req.params.price
+    let thumbnail = req.params.thumbnail
+    let stock = req.params.stock
+    
+    await contenedorNuevo.modificarproducto(id,title,price,thumbnail,stock)
 }
 
 async function guardarproducto (req,res){
@@ -63,13 +63,21 @@ async function guardarproducto (req,res){
        logger.error('Guardado de producto incorrecto')
    }
     res.redirect('/api')
-    
 }
 
-async function buscarprodNombre(req,res) {
-    const title = req.params.title
-    const busqueda = await Firebase.buscarporNombre(title)
+async function agregarproducto (req,res) {
+    try{
+        await contenedorNuevo.agregarProducto(req.body)
+    }catch(err){
+        logger.error('Guardado prod incorrecto')
+    }
+    res.redirect('/api')
+}
+
+async function buscarproducto(req,res) {
+    const id = req.params.id
+    const busqueda = await contenedorNuevo.buscarproducto(id)
     res.send(busqueda)
 }
 
-module.exports = {serverpage,buscarprodNombre,mostrarproductos,borrarproducto,modificarproducto,guardarproducto}
+module.exports = {agregarproducto,mostrarproductos,serverpage,buscarproducto,borrarproducto,modificarproducto,guardarproducto}

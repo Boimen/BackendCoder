@@ -39,10 +39,6 @@ class Carritos {
                     let doc = this.query.doc();
                     doc.create(nuevocarrito)
                     return nuevocarrito
-
-      
-       
-  
 }
     async deleteById (id){
 

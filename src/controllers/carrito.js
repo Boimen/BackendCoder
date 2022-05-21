@@ -1,16 +1,11 @@
-const admin = require("firebase-admin");
-const Carritos = require ('../data/Carritos')
-const ContenedorProdFirebase = require ('../data/ContenedorProdFirebase')
 const {mailCarrito} = require ('../helpers/Email')
+const ContCarritos = require('../datamongo/ContCarritos')
+const ContProductos = require ('../datamongo/ContProductos')
 
-const db = admin.firestore()
-const query = db.collection('productos')
 
-const db2 = admin.firestore()
-const query2 = db2.collection('Carritos')
- 
-const contenedorcarritos1 = new Carritos (query2,[])
-const contFirebase = new ContenedorProdFirebase (query)
+
+const contenedorcarritos1 = new ContCarritos ([])
+const contprod = new ContProductos ()
 
 async function listaCarritos (req,res) {
     try{
@@ -26,7 +21,7 @@ async function listaCarritos (req,res) {
 async function agregarProducto (req,res) {
     const titulo = req.params.title
     try {
-        let busqueda = await contFirebase.buscarporNombre(titulo)
+        let busqueda = await contprod.buscarprodNombre(titulo)
         let carrito = req.session.carrito
         carrito.push(busqueda)
         req.session.carrito = carrito
@@ -48,12 +43,21 @@ async function mostrarcarrito (req,res){
     }
 
 async function confirmarCarrito (req,res) {
-    let usuario = req.session.user
-    let carrito = req.session.carrito
+    const usuario = {
+        email:req.session.user[0].email,
+        nombre:req.session.user[0].nombre
+    }
+    const carrito = req.session.carrito
+    const carritonuevo = {
+        date: new Date(),
+        usuario: usuario,
+        carrito:carrito
+    }
     try{
-    let confirmado = await contenedorcarritos1.crearCarrito(usuario,JSON.stringify(carrito,null,2))
+        const confirmado = await contenedorcarritos1.crearCarrito(carritonuevo)
+        console.log(confirmado)
 
-    await mailCarrito(JSON.stringify(usuario),new Date(),JSON.stringify(carrito))
+    //await mailCarrito(JSON.stringify(usuario),new Date(),JSON.stringify(carrito))
     res.send(confirmado)
     }catch(err){
         console.log(err)

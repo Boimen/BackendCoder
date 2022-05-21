@@ -1,36 +1,26 @@
-const admin = require("firebase-admin");
 const logger = require ('../helpers/logger')
-const ContenedorUsuario = require ('../data/ContenedorUsuarios')
-let serviceAccount = require("../../coderbackend-3c5d1-firebase-adminsdk-d2qrh-3781e00c29.json");
 const {encrypt,compare} = require ('../helpers/encriptacion')
 const jwt = require ('../helpers/jwt')
-const compression = require ('compression')
-const session = require('express-session')
 const enviarmail = require ('../helpers/Email')
 const enviarWsp = require ('../helpers/Whatsapp')
+const ContenedorUser = require ('../datamongo/ContUsuarios')
 
+const nuevoContenedor = new ContenedorUser()
 
-admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount)
-  });
-
-const db4 = admin.firestore()
-const query4 = db4.collection('usuarios')
-
-const usuarios = new ContenedorUsuario(query4)
 
 async function registro (req,res) {
     res.render('Registro');
 }
 
 async function guardarRegistro (req,res) {
-    const {nombre,correo,contraseña} = req.body
-    const usuarioencontrado = await usuarios.buscarporNombre(nombre)
+    const {nombre,email,contraseña} = req.body
+    const usuarioencontrado = await nuevoContenedor.buscarUsuario(email)
+    console.log(usuarioencontrado)
 
-    logger.info(`El nombre a buscar es ${nombre}`)
+    logger.info(`El correo a buscar es ${email}`)
 
-        if (usuarioencontrado.length != 0) {
-        return res.status(400).json(`El usuario: ${nombre} ya existe`)
+        if (usuarioencontrado) {
+        return res.status(400).json(`El correo: ${email} ya esta registrado`)
         }else{
     const user = req.body
     if(!user.contador){
@@ -39,12 +29,12 @@ async function guardarRegistro (req,res) {
     const pass = await encrypt(contraseña)
     let nuevousuario = {
         nombre,
-        correo:correo,
+        email:email,
         contraseña:pass}
-    usuarios.agregarUsuario(nuevousuario)
+    nuevoContenedor.crearUsuario(nuevousuario)
     const access_token = jwt.generateAuthToken(nombre);
 
-    await enviarmail (nombre,correo,contraseña);
+    await enviarmail (nombre,email,contraseña);
     await enviarWsp ();
     }
     res.redirect('/api/login')
@@ -56,17 +46,17 @@ async function getlogin (req,res) {
 
 async function login (req,res) {
 
-    let {nombre,contraseña} = req.body
-    let usuario = await usuarios.buscarporNombre(nombre)
+    let {email,contraseña} = req.body
+    let usuario = await nuevoContenedor.buscarUsuario(email)
     console.log(usuario)
 
     let credencialesok = null
-    credencialesok = usuario.find(u => u.nombre == nombre && compare(contraseña, u.contraseña))
+    credencialesok = usuario.find(u => u.email == email && compare(contraseña, u.contraseña))
     if(!credencialesok){
             res.render('Login-error')
     }
     usuario.contador = 0;
-    const access_token = jwt.generateAuthToken(nombre)
+    const access_token = jwt.generateAuthToken(email)
     req.session.user = usuario
     req.session.carrito = []
     res.redirect('/api')

@@ -1,6 +1,6 @@
 const express = require ('express')
 const Router = require ('express')
-const {serverpage,mostrarproductos,buscarprodNombre,borrarproducto,modificarproducto,guardarproducto} = require ('../controllers/producto')
+const {agregarproducto,serverpage,mostrarproductos,buscarproducto,borrarproducto,modificarproducto,guardarproducto} = require ('../controllers/producto')
 const {graphqlHTTP} = require ('express-graphql')
 const {buildSchema} = require ('graphql')
 const crypto = require ('crypto')
@@ -44,26 +44,13 @@ RouterProductos.get('/', serverpage)
 
 RouterProductos.get('/productos', mostrarproductos)
 
-RouterProductos.get('/productos/:title',buscarprodNombre)
+RouterProductos.get('/productos/:id',buscarproducto)
 
-RouterProductos.post('/guardarejs', guardarproducto)
+RouterProductos.post('/guardarejs', agregarproducto)
 
-RouterProductos.put('/modificar/:id', async (req,res)=>{
-    let {id} = req.params
+//RouterProductos.put('/modificar/:id:title/:price:thumbnail:stock', modificarproducto)
 
-    try{
-        res.send(req.body)
-    //let modificar = await contenedor1.modifyById(id,req.body)
-        if(modificar){
-            res.send(modificar)
-        }else{
-            res.send('Producto inexistente')
-    }}catch(err){
-        console.log(err)
-    }  
-})
-
-RouterProductos.get('/modificar/producto/:id', modificarproducto)
+//RouterProductos.get('/modificar/producto/:id:title:thumbnail:', modificarproducto)
 
 RouterProductos.get('/borrar/:title', borrarproducto)
    

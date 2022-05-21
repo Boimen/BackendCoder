@@ -5,6 +5,11 @@ const session = require('express-session')
 const path = require ('path')
 const logger = require ('./src/helpers/logger')
 const rutas = require ('./src/rutas/Router');
+
+const RouterCarrito = require ('./src/rutas/RutaCarrito')
+const RouterLogin = require ('./src/rutas/RutaLogin')
+const RouterProductos = require ('./src/rutas/RutaProductos')
+
 const app = express();
 const servidor = require ('http').Server(app)
 const io = require ('socket.io')(servidor)
@@ -36,7 +41,10 @@ app.use(express.static(__dirname + '/public'));
 app.use(cookieParser());
 
 
-app.use('/api',rutas)
+app.use('/api',RouterCarrito)
+app.use('/api',RouterLogin)
+app.use('/api',RouterProductos)
+
 
 
 
