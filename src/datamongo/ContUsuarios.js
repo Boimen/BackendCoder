@@ -31,7 +31,7 @@ class ContenedorUser {
         try{
             let buscar = await User.find({email:email})
             let mapeo = buscar.map (doc => ({
-                _id:doc.id,
+                _id:doc._id,
                 nombre:doc.nombre,
                 email:doc.email,
                 contraseña:doc.contraseña,

@@ -1,6 +1,7 @@
 
 const mongoose  = require('mongoose')
 const Product = require ('../schemas/schemaproducto')
+require('dotenv').config();
 
 conexion()
 
@@ -46,6 +47,7 @@ async borrarproducto(title){
         console.log(err)
     }
     }
+    
 async buscarproducto(id){
     try{
         let encontrar = await Product.find({_id:id})
@@ -54,6 +56,7 @@ async buscarproducto(id){
         console.log(err)
     }
 }
+
 async buscarprodNombre(title){
 
     try{
@@ -63,8 +66,10 @@ async buscarprodNombre(title){
             return;
         }else{
             let respuesta = querySnapshot.map(producto => ({
+            _id:producto._id,
             title:producto.title,
-            price:producto.price
+            price:producto.price,
+            thumbnail:producto.thumbnail
         }))
         return respuesta
     }}catch(err){

@@ -25,7 +25,7 @@ async function serverpage (req,res) {
 
 async function mostrarproductos (req,res) {
 
-    const productos = await contenedorNuevo.mostrarproductos()
+    const productos = await contenedorNuevo.mostrarProductos()
     res.send(productos);
 
 }

@@ -30,7 +30,7 @@ function addMessage(e){
         fecha: date,
         texto: document.getElementById('texto').value
     };
-    socket.emit('new-message',mensaje);
+    socket.emit('new-message', mensaje);
 
     document.getElementById('texto').value = ''
     document.getElementById('texto').focus()

@@ -1,11 +1,12 @@
 const {mailCarrito} = require ('../helpers/Email')
 const ContCarritos = require('../datamongo/ContCarritos')
 const ContProductos = require ('../datamongo/ContProductos')
-
+const ContUsuarios = require ('../datamongo/ContUsuarios')
 
 
 const contenedorcarritos1 = new ContCarritos ([])
 const contprod = new ContProductos ()
+const contUsers = new ContUsuarios ()
 
 async function listaCarritos (req,res) {
     try{
@@ -43,22 +44,20 @@ async function mostrarcarrito (req,res){
     }
 
 async function confirmarCarrito (req,res) {
-    const usuario = {
-        email:req.session.user[0].email,
-        nombre:req.session.user[0].nombre
-    }
-    const carrito = req.session.carrito
+
     const carritonuevo = {
         date: new Date(),
-        usuario: usuario,
-        carrito:carrito
+        productos:req.session.carrito,
+        usuario: req.session.user[0],
     }
     try{
         const confirmado = await contenedorcarritos1.crearCarrito(carritonuevo)
-        console.log(confirmado)
+        res.send(confirmado)
 
-    //await mailCarrito(JSON.stringify(usuario),new Date(),JSON.stringify(carrito))
-    res.send(confirmado)
+        let usuario = await (contUsers.buscarUsuario(req.session.user[0].email))
+
+
+        await mailCarrito(JSON.stringify(usuario),new Date(),JSON.stringify(req.session.carrito))
     }catch(err){
         console.log(err)
     }
