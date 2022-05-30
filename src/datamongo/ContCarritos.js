@@ -1,17 +1,19 @@
 const mongoose  = require('mongoose')
 const Carrito = require ('../schemas/schemacarrito')
+const logger = require ('../helpers/logger')
+require('dotenv').config();
 
 conexion()
 
 async function conexion (){
     try{
-        const URL = 'mongodb+srv://Boimen11:diehose11@cluster0.lao3a.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
+        const URL = process.env.MONGO_SERVER
         let respuesta = await mongoose.connect(URL, {
             useNewUrlParser: true,
             useUnifiedTopology:true
         })
     }catch(err){
-
+        logger.error('Error de conexion DB Carritos' +err)
     }
 }
 class ContenedorCarritos {

@@ -9,7 +9,7 @@ socket.on("messages", function (data) {
 
 
 function render(data){
-    let html = data.map(function (elem, index)  {
+    const html = data.map(function (elem, index)  {
         return (`
         <div>
         <strong> ${elem.author}</strong>

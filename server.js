@@ -9,7 +9,6 @@ const MongoStore = require('connect-mongo');
 const session = require('express-session')
 const path = require ('path')
 const logger = require ('./src/helpers/logger')
-const rutas = require ('./src/rutas/Router');
 
 const Chat = require ('./src/datamongo/ContMensajes')
 const RouterCarrito = require ('./src/rutas/RutaCarrito')
@@ -29,17 +28,13 @@ app.use(session({
 }))
 
 
-/*
-    const db3 = admin.firestore()
-    const query3 = db3.collection('Mensajes')
-*/
 app.set("layout", "layouts/layout") 
 app.set("views", path.join(__dirname, "./views"));
 app.set("view engine", "ejs");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(express.static(__dirname + '/public'));
+app.use(express.static('/views'));
 
  
 app.use(cookieParser());
@@ -74,6 +69,7 @@ io.on("connection", async (socket) => {
       io.sockets.emit("messages", messages);
     });
   });
+
 const PORT = parseInt(process.argv[2]) || 8080 
 
 

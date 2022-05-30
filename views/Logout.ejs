@@ -9,7 +9,12 @@
 </head>
 <body>
     <div class="container mt-3 p-5" style='justify-content:center'>
-    <h1>Gracias por tu visita <%-nombre-%></h1>
+        <h1>Gracias por tu visita <%-nombre-%></h1>
+        <div>
+            <form action="/api/login" method="GET">
+            <button class="btn btn-success mt-3 mb-5">Volver al login</button>
+            </form>
+        </div>
     </div>
     <script src="/server.js"></script>
 </body>

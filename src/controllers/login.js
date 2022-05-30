@@ -1,7 +1,7 @@
 const logger = require ('../helpers/logger')
-const {encrypt,compare} = require ('../helpers/encriptacion')
 const jwt = require ('../helpers/jwt')
-const enviarmail = require ('../helpers/Email')
+const {enviarmail} = require ('../helpers/Email')
+const {encrypt,compare} = require ('../helpers/encriptacion')
 const enviarWsp = require ('../helpers/Whatsapp')
 const ContenedorUser = require ('../datamongo/ContUsuarios')
 
@@ -33,12 +33,14 @@ async function guardarRegistro (req,res) {
         contraseña:pass}
     nuevoContenedor.crearUsuario(nuevousuario)
     const access_token = jwt.generateAuthToken(nombre);
-
-    await enviarmail (nombre,email,contraseña);
-    await enviarWsp ();
+    try{
+    await enviarmail(nombre,email,contraseña);
+    //wait enviarWsp ();
+    }catch(err){
+        console.log('error de envio email')
     }
     res.redirect('/api/login')
-}
+    }}
 
 async function getlogin (req,res) {
     res.render('Login')
@@ -49,7 +51,9 @@ async function login (req,res) {
     let {email,contraseña} = req.body
     let usuario = await nuevoContenedor.buscarUsuario(email)
     console.log(usuario)
-
+    if(usuario == null){
+        res.render('Login-error')
+    }
     let credencialesok = null
     credencialesok = usuario.find(u => u.email == email && compare(contraseña, u.contraseña))
     if(!credencialesok){
